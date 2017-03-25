@@ -53,8 +53,8 @@ import namewangexperiment.com.wangweibo.OnlineData.Other;
 import namewangexperiment.com.wangweibo.OnlineData.TreeUser;
 import namewangexperiment.com.wangweibo.OnlineData.WuContext;
 import namewangexperiment.com.wangweibo.R;
-import namewangexperiment.com.wangweibo.WuUpload.MyUpload;
-import namewangexperiment.com.wangweibo.WuUpload.WuSdcard;
+import namewangexperiment.com.wangweibo.Utils.MySdcard;
+import namewangexperiment.com.wangweibo.Utils.MyUpload;
 
 /**
  * Created by Administrator on 2016/11/29.
@@ -76,10 +76,10 @@ public class Writetreememory extends Activity {
     private String tempUri;
     private String imgstr;
     private MyUpload myUpload;
-    private WuSdcard mysdcard= WuSdcard.getMysdcard();
-    private String imgurl1=WuSdcard.pathwriteimg+ File.separator+"img1.jpg";
-    private String imgurl2=WuSdcard.pathwriteimg+ File.separator+"img2.jpg";
-    private String imgurl3=WuSdcard.pathwriteimg+ File.separator+"img3.jpg";
+    private MySdcard mysdcard= MySdcard.getMysdcard();
+    private String imgurl1=MySdcard.pathwriteimg+ File.separator+"img1.jpg";
+    private String imgurl2=MySdcard.pathwriteimg+ File.separator+"img2.jpg";
+    private String imgurl3=MySdcard.pathwriteimg+ File.separator+"img3.jpg";
     private int coutnimg=0;
     private int other_jundge=0;
     private int other_jundge1=0;
@@ -99,7 +99,6 @@ public class Writetreememory extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setOnHead();
         setContentView(R.layout.activity_write);
         mcontext=this;
         myUpload=new MyUpload(mcontext);
@@ -816,19 +815,5 @@ public class Writetreememory extends Activity {
      */
     public static boolean isGooglePhotosUri(Uri uri) {
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
-    }
-    private void setOnHead() {
-        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
-            );
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(Color.TRANSPARENT);
-            window.setNavigationBarColor(Color.TRANSPARENT);
-        }
     }
 }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -21,7 +22,9 @@ import cn.bmob.v3.BmobConfig;
 import cn.bmob.v3.BmobUser;
 import namewangexperiment.com.wangweibo.OnlineData.TreeUser;
 import namewangexperiment.com.wangweibo.R;
+import namewangexperiment.com.wangweibo.Utils.SharePreferenceUtil;
 import namewangexperiment.com.wangweibo.login.LoginActivity;
+import namewangexperiment.com.wangweibo.write.Writetreememory;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener{
@@ -34,7 +37,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         mcontext=this;
         initView();
-        mbmobinitdata();
+        //mbmobinitdata();
     }
 
     private void initView() {
@@ -58,7 +61,8 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        head_rl= (RelativeLayout) findViewById(R.id.header_headimg_main_bg);
+        View view_head= LayoutInflater.from(this).inflate(R.layout.nav_header_main,null);
+        head_rl= (RelativeLayout) view_head.findViewById(R.id.header_headimg_main_bg);
         head_rl.setOnClickListener(this);
     }
 
@@ -88,8 +92,8 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Intent it=new Intent(this,LoginActivity.class);
-            startActivity(it);
+            SharePreferenceUtil.putSettingDataBoolean(mcontext,SharePreferenceUtil.AUTOLOGIN,false);
+            Intent it=new Intent(MainActivity.this, LoginActivity.class);startActivity(it);MainActivity.this.finish();
             return true;
         }
 
@@ -102,12 +106,16 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_write) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
+            Intent it=new Intent(MainActivity.this, Writetreememory.class);
+            startActivity(it);
+        } else if (id == R.id.nav_search) {
+            Intent it=new Intent(MainActivity.this, Writetreememory.class);
+            startActivity(it);
+        } else if (id == R.id.nav_minetab) {
+            Intent it=new Intent(MainActivity.this, SettingActivity.class);
+            startActivity(it);
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {

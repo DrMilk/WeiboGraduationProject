@@ -1,437 +1,233 @@
 package namewangexperiment.com.wangweibo.login;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
-import android.app.LoaderManager.LoaderCallbacks;
-import android.content.CursorLoader;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.content.Loader;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.graphics.Color;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.Window;
-import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-
+import android.widget.ImageView;
 import java.util.ArrayList;
-import java.util.List;
 
+import cn.bmob.v3.Bmob;
+import cn.bmob.v3.BmobConfig;
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.LogInListener;
-import namewangexperiment.com.wangweibo.OnlineData.TreeUser;
+import cn.bmob.v3.listener.SaveListener;
+import namewangexperiment.com.wangweibo.Main.MainActivity;
+import namewangexperiment.com.wangweibo.OnlineData.WangUser;
 import namewangexperiment.com.wangweibo.R;
+import namewangexperiment.com.wangweibo.Utils.L;
+import namewangexperiment.com.wangweibo.Utils.MySdcard;
+import namewangexperiment.com.wangweibo.Utils.SharePreferenceUtil;
+import namewangexperiment.com.wangweibo.Utils.StringLegalUtil;
 import namewangexperiment.com.wangweibo.Utils.T;
-
-import static android.Manifest.permission.READ_CONTACTS;
+import namewangexperiment.com.wangweibo.mineview.WangProcessDialog;
 
 /**
- * A login screen that offers login via email/password.
+ * Created by Administrator on 2017/3/16.
  */
-public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
-    String TGA="LoginActivity";
-    /**
-     * Id to identity READ_CONTACTS permission request.
-     */
-    private static final int REQUEST_READ_CONTACTS = 0;
-
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
-    private UserLoginTask mAuthTask = null;
-
-    // UI references.
-    private AutoCompleteTextView mEmailView;
-    private EditText mPasswordView;
-    private View mProgressView;
-    private View mLoginFormView;
-    private Button button_chuce;
-    private TextView text_forget;
+public class LoginActivity extends Activity implements View.OnClickListener{
+    private String TAG="LoginActivity";
+    private EditText edit_userid;
+    private EditText edit_password;
+    private Button button_ok;
+    private Button button_sign;
+    private ImageView img_on;
+    private boolean button_status=true;
+    private Context mcontext;
+    private WangProcessDialog xuloginprocess;
+    private MySdcard mySdcard;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setOnHead();
         setContentView(R.layout.activity_login);
-        // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        populateAutoComplete();
-        mPasswordView = (EditText) findViewById(R.id.password);
-        button_chuce=(Button)findViewById(R.id.email_sign_sign_button);
-        text_forget=(TextView) findViewById(R.id.forget_key);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
-                }
+        mcontext=this;
+        initView();
+        mbmobinitdata();
+        mySdcard=new MySdcard();
+        mySdcard.initWuSdcard(mcontext);
+    }
 
-                return false;
-            }
-
-
-        });
-
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptLogin();
-            }
-        });
-        button_chuce.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signnewtree();
-            }
-        });
-        text_forget.setOnClickListener(new OnClickListener() {
+    private void initView() {
+        button_ok= (Button) findViewById(R.id.button_ok);
+        button_sign= (Button) findViewById(R.id.button_sign);
+        img_on= (ImageView) findViewById(R.id.login_img_on);
+        edit_userid= (EditText) findViewById(R.id.login_uesrid);
+        edit_password= (EditText) findViewById(R.id.login_password);
+        ImageView img_weibo= (ImageView) findViewById(R.id.login_weibo);
+        ImageView img_qq= (ImageView) findViewById(R.id.login_qq);
+        ImageView img_weixin= (ImageView) findViewById(R.id.login_weixin);
+        img_on.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                forgetnewtree();
+                if(!button_status){
+                    L.i(TAG,"点了吗");
+                    img_on.setImageResource(R.mipmap.button_ofh);
+                    SharePreferenceUtil.putSettingDataBoolean(mcontext,SharePreferenceUtil.AUTOLOGIN,false);
+                    button_status=true;
+                }else {
+                    L.i(TAG,"点了吗1");
+                    img_on.setImageResource(R.mipmap.button_onh);
+                    button_status=false;
+                    SharePreferenceUtil.putSettingDataBoolean(mcontext,SharePreferenceUtil.AUTOLOGIN,true);
+                }
+
             }
         });
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
+        button_ok.setOnClickListener(this);
+        button_sign.setOnClickListener(this);
+        img_weibo.setOnClickListener(this);
+        img_qq.setOnClickListener(this);
+        img_weixin.setOnClickListener(this);
     }
 
-    private void forgetnewtree() {
-        Intent it1=new Intent(this,ForgetkeyActivity.class);
-        startActivity(it1);
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.button_ok:gologin();break;
+            case R.id.button_sign:
+                Intent it1=new Intent(LoginActivity.this,SignActivity.class);startActivity(it1);break;
+            case R.id.login_weibo:
+                T.showShot(mcontext,"-未实现此接口-");break;
+            case R.id.login_qq:T.showShot(mcontext,"-未实现此接口-");break;
+            case R.id.login_weixin:T.showShot(mcontext,"-未实现此接口-");break;
+        }
     }
 
-    private void signnewtree() {
-        Intent it=new Intent(this,SignActivity.class);
+    private void gologin() {
+        //uploadtest();
+        button_ok.setEnabled(false);
+        boolean jundge_legal=true;
+        String id=edit_userid.getText().toString().trim();
+        String password=edit_password.getText().toString().trim();
+        if(!StringLegalUtil.isHaveLength(id)){
+            edit_userid.setError("请输入手机号！");
+            jundge_legal=false;
+        }else if(!StringLegalUtil.isCorrectPhonenum(id)){
+            edit_userid.setError("请输入正确的手机号！");
+            jundge_legal=false;
+        }
+        if(jundge_legal){
+            xuloginprocess=new WangProcessDialog(mcontext);xuloginprocess.show();
+            WangUser.loginByAccount(id,password, new LogInListener<WangUser>() {
+                @Override
+                public void done(WangUser xuUser, BmobException e) {
+                    if(xuUser!=null) {
+                        Intent it=new Intent(LoginActivity.this,MainActivity.class);startActivity(it);
+                        LoginActivity.this.finish();
+                    }else {
+                        T.showShot(mcontext,"登录失败！");
+                        button_ok.setEnabled(true);
+                    }
+                    xuloginprocess.dismiss();
+                }
+            });
+        }else {
+            button_ok.setEnabled(true);
+        }
+    }
+
+//    private void uploadtest() {
+//        Fooddata fooddata=new Fooddata("水煮肉片","水煮肉片灰常好吃",true,97,4,new ArrayList<String>());
+//        fooddata.save(new SaveListener<String>() {
+//            @Override
+//            public void done(String s, BmobException e) {
+//
+//            }
+//        });
+//        Hoteldata hoteldata=new Hoteldata("易蓝大酒店","地下创业园楼下快来吧",true,180,2,new ArrayList<String>());
+//        hoteldata.save(new SaveListener<String>() {
+//            @Override
+//            public void done(String s, BmobException e) {
+//
+//            }
+//        });
+//        Traveldata traveldata=new Traveldata("上海一日游","地下创业园楼下快来吧",true,new ArrayList<String>());
+//        traveldata.save(new SaveListener<String>() {
+//            @Override
+//            public void done(String s, BmobException e) {
+//
+//            }
+//        });
+//        Remakdata remakdata=new Remakdata("看样子挺好的样子","18249028972");
+//        remakdata.save(new SaveListener<String>() {
+//            @Override
+//            public void done(String s, BmobException e) {
+//
+//            }
+//        });
+//       Alldata alldata=new Alldata();
+//        ArrayList<String> list_spot=new ArrayList<>();
+//        list_spot.add("99d05919b6");
+//        list_spot.add("40bbf211d6");
+//        list_spot.add("5ad99134f8");
+//        list_spot.add("ddd0c4a445");
+//        list_spot.add("5bf37ec134");
+//        list_spot.add("f707e19325");
+//        list_spot.add("3a1f70cc3e");
+//        list_spot.add("dd356d5a9a");
+//        list_spot.add("9c142046ec");
+//        alldata.setList_food(new ArrayList<String>());
+//        alldata.setList_hotel(new ArrayList<String>());
+//        alldata.setList_spot(list_spot);
+//        alldata.setList_travel(new ArrayList<String>());
+//        alldata.save(new SaveListener<String>() {
+//            @Override
+//            public void done(String s, BmobException e) {
+//                if(e==null){
+//                    L.i(TAG,"上传成功！");
+//                }
+//            }
+//        });
+//    }
+
+    private void mbmobinitdata() {
+        Bmob.initialize(this, "99dd404fe87588c447057b2a1d533eee");
+        //第二：自v3.4.7版本开始,设置BmobConfig,允许设置请求超时时间、文件分片上传时每片的大小、文件的过期时间(单位为秒)，
+        BmobConfig config =new BmobConfig.Builder(this)
+                //设置appkey
+                .setApplicationId("99dd404fe87588c447057b2a1d533eee")
+                //请求超时时间（单位为秒）：默认15s
+                .setConnectTimeout(30)
+                //文件分片上传时每片的大小（单位字节），默认512*1024
+                .setUploadBlockSize(1024*1024)
+                //文件的过期时间(单位为秒)：默认1800s
+                .setFileExpiration(2500)
+                .build();
+        Bmob.initialize(config);
+    }
+    private boolean checkuser() {
+        WangUser bmobUser = BmobUser.getCurrentUser(WangUser.class);
+        if(bmobUser != null){
+            // 允许用户使用应用
+            //  String name= (String) BmobUser.getObjectByKey("treename");
+            //  text_username.setText(name);
+            userrun();
+            return true;
+        }else{
+            //缓存用户对象为空时， 可打开用户注册界面…
+            return false;
+        }
+    }
+
+    private void userrun() {
+        Intent it=new Intent(LoginActivity.this,MainActivity.class);
         startActivity(it);
     }
 
-    private void populateAutoComplete() {
-        if (!mayRequestContacts()) {
-            return;
-        }
-
-        getLoaderManager().initLoader(0, null, this);
-    }
-
-    private boolean mayRequestContacts() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-                        }
-                    });
-        } else {
-            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-        }
-        return false;
-    }
-
-    /**
-     * Callback received when a permissions request has been completed.
-     */
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_READ_CONTACTS) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                populateAutoComplete();
+    protected void onResume() {
+        if(SharePreferenceUtil.getSettingDataBoolean(mcontext,SharePreferenceUtil.AUTOLOGIN)){
+            if(checkuser()){
+
             }
+        }else {
+            img_on.setImageResource(R.mipmap.button_ofh);
         }
-    }
-
-
-    /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
-    private void attemptLogin() {
-        boolean jundge=true;
-        String usernum=mEmailView.getText().toString();
-        String userpassword=mPasswordView.getText().toString();
-        if (mAuthTask != null) {
-            return;
-        }
-
-        // Reset errors.
-        mEmailView.setError(null);
-        mPasswordView.setError(null);
-
-        // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
-
-        boolean cancel = false;
-        View focusView = null;
-
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
-            cancel = true;
-            jundge=false;
-        } else if (!isNumValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
-            cancel = true;
-            jundge=false;
-        }
-
-//        if (cancel) {
-//            // There was an error; don't attempt login and focus the first
-//            // form field with an error.
-//            focusView.requestFocus();
-//        } else {
-//            // Show a progress spinner, and kick off a background task to
-//            // perform the user login attempt.
-//
-//            mAuthTask = new UserLoginTask(email, password);
-//            mAuthTask.execute((Void) null);
-//        }
-        if(jundge){
-            TreeUser.loginByAccount(usernum,userpassword, new LogInListener<TreeUser>() {
-
-                @Override
-                public void done(TreeUser user, BmobException e) {
-                    if(user!=null){
-                        Log.i("smile","用户登陆成功");
-                        showProgress(true);
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                int i=1;
-                                while(i>0){
-                                    i--;
-                                    try {
-                                        Thread.sleep(1000l);
-                                    } catch (InterruptedException e1) {
-                                        e1.printStackTrace();
-                                    }
-                                }
-                                thisfinish();
-                            }
-                        }).start();
-                       // TreeUser mgetuser = BmobUser.getCurrentUser(TreeUser.class);
-                      //  Toast.makeText(getApplicationContext(),mgetuser.toString(),Toast.LENGTH_SHORT).show();
-                    }else{
-                        T.showShot(LoginActivity.this,"用户密码错误!");
-
-                    }
-                }
-            });
-        }else{
-
-        }
-    }
-
-    private void thisfinish() {
-        this.finish();
-    }
-
-    private boolean isNumValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.length()==11;
-    }
-
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 5;
-    }
-
-    /**
-     * Shows the progress UI and hides the login form.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private void showProgress(final boolean show) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
-
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
-    }
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return new CursorLoader(this,
-                // Retrieve data rows for the device user's 'profile' contact.
-                Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI,
-                        ContactsContract.Contacts.Data.CONTENT_DIRECTORY), ProfileQuery.PROJECTION,
-
-                // Select only email addresses.
-                ContactsContract.Contacts.Data.MIMETYPE +
-                        " = ?", new String[]{ContactsContract.CommonDataKinds.Email
-                .CONTENT_ITEM_TYPE},
-
-                // Show primary email addresses first. Note that there won't be
-                // a primary email address if the user hasn't specified one.
-                ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        List<String> emails = new ArrayList<>();
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            emails.add(cursor.getString(ProfileQuery.ADDRESS));
-            cursor.moveToNext();
-        }
-
-        addEmailsToAutoComplete(emails);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {
-
-    }
-
-    private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
-        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(LoginActivity.this,
-                        android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
-
-        mEmailView.setAdapter(adapter);
-    }
-
-
-    private interface ProfileQuery {
-        String[] PROJECTION = {
-                ContactsContract.CommonDataKinds.Email.ADDRESS,
-                ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
-        };
-
-        int ADDRESS = 0;
-        int IS_PRIMARY = 1;
-    }
-
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-
-        private final String mEmail;
-        private final String mPassword;
-
-        UserLoginTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-
-            // TODO: register the new account here.
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
-
-            if (success) {
-                finish();
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
-        }
-    }
-    private void setOnHead() {
-        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
-                    | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(Color.TRANSPARENT);
-            window.setNavigationBarColor(Color.TRANSPARENT);
-        }
+        super.onResume();
     }
 }
-

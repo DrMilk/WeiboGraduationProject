@@ -2,53 +2,71 @@ package namewangexperiment.com.wangweibo.login;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
+import android.widget.TextView;
+import java.util.Date;
 
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
-import namewangexperiment.com.wangweibo.OnlineData.TreeUser;
+import namewangexperiment.com.wangweibo.OnlineData.WangUser;
 import namewangexperiment.com.wangweibo.R;
+import namewangexperiment.com.wangweibo.Utils.L;
+import namewangexperiment.com.wangweibo.Utils.StringLegalUtil;
 import namewangexperiment.com.wangweibo.Utils.T;
-import namewangexperiment.com.wangweibo.wustringparsing.MyStringPsrsing;
+import namewangexperiment.com.wangweibo.mineview.WangProcessDialog;
+import namewangexperiment.com.wangweibo.mineview.WangProcessDialogSecond;
 
 /**
- * Created by Administrator on 2016/11/28.
+ * Created by Administrator on 2017/3/16.
  */
 
-public class SignActivity extends Activity {
-    private Context mcontext;
-    private EditText editTextphone;
-    private EditText editTextpassword;
-    private EditText editTextname;
-    private Spinner mspinner;
-    private String sex="男";
+public class SignActivity extends Activity implements View.OnClickListener{
+    private String TAG="SignActivity";
+    private EditText edit_phonenum;
+    private EditText edit_password;
+    private EditText edit_password_again;
+    private EditText edit_name;
+    private EditText edit_address;
+    private EditText edit_qq;
+    private EditText edit_wechat;
+    private EditText edit_email;
+    private TextView text_data;
+    private Spinner spinner_sex;
     private Button button_ok;
-    private MyStringPsrsing myStringPsrsing=new MyStringPsrsing();
+    private Button button_back;
+    private String sex="男";
+    private WangProcessDialogSecond xu_dialog;
+    private Context mcontext;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setOnHead();
-        setContentView(R.layout.signactivity);
-        editTextphone= (EditText) findViewById(R.id.signactivity_phonenum);
-        editTextpassword= (EditText) findViewById(R.id.signactivity_key);
-        editTextname= (EditText) findViewById(R.id.signactivity_name);
-        mspinner= (Spinner) findViewById(R.id.sign_spin);
+        setContentView(R.layout.activity_sign);
         mcontext=this;
-        mspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        initView();
+    }
+
+    private void initView() {
+        edit_phonenum= (EditText) findViewById(R.id.sign_phonenum);
+        edit_password= (EditText) findViewById(R.id.sign_password);
+        edit_password_again= (EditText) findViewById(R.id.sign_password_again);
+        edit_name= (EditText) findViewById(R.id.sign_name);
+        edit_address= (EditText) findViewById(R.id.sign_address);
+        edit_qq= (EditText) findViewById(R.id.sign_qq);
+        edit_wechat= (EditText) findViewById(R.id.sign_wechat);
+        edit_email= (EditText) findViewById(R.id.sign_emial);
+        spinner_sex= (Spinner) findViewById(R.id.sign_sex);
+        button_ok= (Button) findViewById(R.id.button_ok);
+        button_back= (Button) findViewById(R.id.button_back);
+        spinner_sex= (Spinner) findViewById(R.id.sign_sex);
+        spinner_sex.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                sex= (String) mspinner.getSelectedItem();
+                sex= (String) spinner_sex.getSelectedItem();
             }
 
             @Override
@@ -56,97 +74,91 @@ public class SignActivity extends Activity {
 
             }
         });
-        button_ok= (Button) findViewById(R.id.sign_chuce);
-        button_ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                attemptsign();
-                button_ok.setEnabled(false);
-            }
-        });
+        button_ok.setOnClickListener(this);
+        button_back.setOnClickListener(this);
     }
 
-    private void attemptsign() {
-        boolean jundge=true;
-        Log.i("Wu","nihao");
-        String str_phone=editTextphone.getText().toString();
-        String str_key=editTextpassword.getText().toString();
-        String str_name=editTextname.getText().toString();
-        if(!isCorretUser(str_phone)) {
-            editTextphone.setError(getString(R.string.error_invalid_email));
-            jundge = false;
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.button_ok:gosign();break;
+            case R.id.button_back:SignActivity.this.finish();break;
         }
-        else if (!isMima(str_key)){
-            editTextpassword.setError(getString(R.string.error_invalid_password));
-             jundge=false;
+    }
+    private void gosign() {
+        boolean jundge_legal=true;
+        button_ok.setEnabled(false);
+        String str_phonenum=edit_phonenum.getText().toString().trim();
+        String str_password=edit_password.getText().toString().trim();
+        String str_password_again=edit_password_again.getText().toString().trim();
+        String str_name=edit_name.getText().toString().trim();
+        String str_address=edit_address.getText().toString().trim();
+        String str_qq=edit_qq.getText().toString().trim();
+        String str_wechat=edit_wechat.getText().toString().trim();
+        String str_email=edit_email.getText().toString().trim();
+        if(!StringLegalUtil.isHaveLength(str_phonenum)){
+            edit_phonenum.setError("请输入手机号！");
+            jundge_legal=false;
         }
-        else if(!isName(str_name)){
-            editTextname.setError("昵称不能为空");
-            jundge=false;
+        else if(!StringLegalUtil.isHaveLength(str_password)){
+            edit_phonenum.setError("请输入密码！");
+            jundge_legal=false;
         }
-        //else if()
-        if(jundge){
-            TreeUser bu = new TreeUser();
-            bu.setUsername(str_phone);
-            bu.setPassword(str_key);
-            bu.setTreePassword(str_key);
-            bu.setTreename(str_name);
-            bu.setSex(sex);
-            bu.signUp(new SaveListener<TreeUser>() {
+        else if(!StringLegalUtil.isHaveLength(str_password_again)){
+            edit_phonenum.setError("请重复输入密码！");
+            jundge_legal=false;
+        }
+        else if(!StringLegalUtil.isHaveLength(str_name)){
+            edit_phonenum.setError("请输入昵称！");
+            jundge_legal=false;
+        }
+        else if(!StringLegalUtil.isHaveLength(str_email)){
+            edit_phonenum.setError("请输入邮箱！");
+            jundge_legal=false;
+        }
+        else if(!StringLegalUtil.isCorrectPhonenum(str_phonenum)){
+            edit_phonenum.setError("请输入正确的手机号！");
+            jundge_legal=false;
+        }
+        else if(!str_password.equals(str_password_again)){
+            edit_password.setError("两次密码输入不一样！");
+            edit_password_again.setError("两次密码输入不一样！");
+            jundge_legal=false;
+        }else if(!StringLegalUtil.isCorrectEmail(str_email)){
+            edit_email.setError("请输入正确的邮箱号号！");
+            jundge_legal=false;
+        }else if(!StringLegalUtil.isCorrectNumer(str_qq)){
+            edit_email.setError("请输入正确的QQ号！");
+            jundge_legal=false;
+        }else if(!StringLegalUtil.isSafePassword(str_password)){
+            edit_email.setError("输入密码过于简单！");
+            jundge_legal=false;
+        }
+        if(jundge_legal){
+            xu_dialog=new WangProcessDialogSecond(this);xu_dialog.show();
+            WangUser wanguser=new WangUser();
+            wanguser.setUsername(str_phonenum);
+            wanguser.setPassword(str_password);
+            wanguser.setPasswordshow(str_password);
+            wanguser.setBirthday(new Date(1996,9,14));
+            wanguser.setName(str_name);
+            wanguser.setAddress(str_address);
+            wanguser.signUp(new SaveListener<WangUser>() {
                 @Override
-                public void done(TreeUser s, BmobException e) {
+                public void done(WangUser o, BmobException e) {
                     if(e==null){
                         T.showShot(mcontext,"注册成功！");
-                    }else{
+                        L.i(TAG,"注册成功！");
+                    }else {
                         T.showShot(mcontext,"注册失败！");
+                        L.i(TAG,"注册失败！");
                         button_ok.setEnabled(true);
                     }
+                    xu_dialog.dismiss();
                 }
             });
-//            new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    int i=1;
-//                    while(i>0){
-//                        i--;
-//                        try {
-//                            Thread.sleep(1000l);
-//                        } catch (InterruptedException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                    thisfinish();
-//                }
-//            }).start();
         }else {
-            Toast.makeText(getApplicationContext(),"注册成功！",Toast.LENGTH_SHORT);
-        }
-    }
-
-    private void thisfinish() {
-        this.finish();
-    }
-    private boolean isCorretUser(String phonenum){
-        return  myStringPsrsing.istrueUser(phonenum);
-    }
-    private boolean isMima(String mima){
-        return  mima.length()>5;
-    }
-    private boolean isName(String phonenum){
-        return  phonenum.length()>0;
-    }
-    private void setOnHead() {
-        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
-                    | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(Color.TRANSPARENT);
-            window.setNavigationBarColor(Color.TRANSPARENT);
+            button_ok.setEnabled(true);
         }
     }
 }

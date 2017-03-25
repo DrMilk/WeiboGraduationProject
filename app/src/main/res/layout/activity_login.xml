@@ -1,136 +1,152 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@mipmap/make_poem_season_bg">
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:background="@color/mp_blue">
+        <TextView
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="用户登录"
+            android:layout_gravity="center"
+            android:theme="@style/title_font"/>
+    </RelativeLayout>
+
     <LinearLayout
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:orientation="vertical">
-    <!-- Login progress -->
-    <ProgressBar
-        android:id="@+id/login_progress"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:visibility="gone" />
-
-    <ScrollView
-        android:id="@+id/login_form"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:id="@+id/email_login_form"
+        android:layout_height="wrap_content"
+        android:paddingRight="40dp"
+        android:paddingLeft="40dp">
+        <TextView
+            android:layout_marginTop="60dp"
+            android:theme="@style/style_about"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:text="用户:" />
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+        <EditText
+            android:id="@+id/login_uesrid"
+            android:layout_marginTop="10dp"
+            android:minLines="1"
+            android:inputType="number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_marginTop="20dp"
+            android:theme="@style/style_about"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="密码:"/>
 
-                <AutoCompleteTextView
-                    android:id="@+id/email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/prompt_email"
-                    android:inputType="number"
-                    android:maxLines="1"
-                    android:singleLine="true" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/prompt_password"
-                    android:imeActionId="@+id/login"
-                    android:imeActionLabel="@string/action_sign_in_short"
-                    android:imeOptions="actionUnspecified"
-                    android:inputType="textPassword"
-                    android:maxLines="1"
-                    android:singleLine="true" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <Button
-                android:id="@+id/email_sign_in_button"
-                style="?android:textAppearanceSmall"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/action_sign_in"
-                android:textColor="@color/ebur"
-                android:background="@drawable/button_bg"/>
-            <Button
-                android:id="@+id/email_sign_sign_button"
-                style="?android:textAppearanceSmall"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/action_sign_on"
-                android:textColor="@color/ebur"
-                android:background="@drawable/button_bg" />
+        <EditText
+            android:id="@+id/login_password"
+            android:inputType="textPassword"
+            android:layout_marginTop="10dp"
+            android:minLines="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <RelativeLayout
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
             <TextView
-                android:id="@+id/forget_key"
-                android:layout_marginTop="10dp"
+                android:layout_centerVertical="true"
+                android:theme="@style/style_about"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="忘记密码"/>
-        </LinearLayout>
-    </ScrollView>
-</LinearLayout>
-    <FrameLayout
+                android:text="自动登录:"/>
+            <ImageView
+                android:layout_alignParentRight="true"
+                android:id="@+id/login_img_on"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/button_onh"
+                />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="20dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:layout_gravity="center"
-            android:text="其他登录方式"/>
-        <ImageView
+        android:layout_height="wrap_content"
+        android:gravity="center">
+        <Button
+            android:id="@+id/button_ok"
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:background="@drawable/button_bg"
+            android:textColor="@color/white_smoke"
+            android:text="登录"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+        <Button
+            android:id="@+id/button_sign"
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:background="@drawable/button_bg"
+            android:textColor="@color/white_smoke"
+            android:text="注册"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@mipmap/common_white_divider_line"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"/>
-    </FrameLayout>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="6dp">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/make_poem_share_sina_normal"
-            android:padding="10dp"
-            />
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/make_poem_share_qq_normal"
-            android:padding="10dp"
-            />
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/make_poem_share_weixin_normal"
-            android:padding="10dp"
-            />
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp">
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/mp_blue"/>
+            <TextView
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:text="第三方登录"/>
+        </FrameLayout>
+        <LinearLayout
+            android:layout_marginTop="40dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/login_weibo"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@mipmap/make_poem_share_sina_normal"/>
+           <ImageView
+               android:id="@+id/login_qq"
+               android:layout_marginLeft="20dp"
+               android:layout_width="50dp"
+               android:layout_height="50dp"
+               android:src="@mipmap/make_poem_share_qq_normal"/>
+            <ImageView
+                android:id="@+id/login_weixin"
+                android:layout_marginLeft="20dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@mipmap/make_poem_share_weixin_normal"/>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>
