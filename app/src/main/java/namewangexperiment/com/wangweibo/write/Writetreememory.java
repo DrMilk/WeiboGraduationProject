@@ -10,7 +10,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -24,8 +23,6 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -70,7 +67,6 @@ public class Writetreememory extends Activity {
     private ImageView deleteimage1;
     private ImageView deleteimage2;
     private ImageView deleteimage3;
-    private EditText edit_id;
     private EditText edit_context;
     private Button button_ok;
     private String tempUri;
@@ -130,7 +126,6 @@ public class Writetreememory extends Activity {
         deleteimage1= (ImageView) findViewById(R.id.activity_write_deleteimg1);
         deleteimage2= (ImageView) findViewById(R.id.activity_write_deleteimg2);
         deleteimage3= (ImageView) findViewById(R.id.activity_write_deleteimg3);
-        edit_id= (EditText) findViewById(R.id.activity_write_idedit);
         edit_context= (EditText) findViewById(R.id.activity_write_contextedit);
         button_ok= (Button) findViewById(R.id.activity_write_ok);
         deleteimage1.setVisibility(View.INVISIBLE);
@@ -218,7 +213,8 @@ public class Writetreememory extends Activity {
     private void goOk() {
         if(checkuser()){
             final String[] context_id_str = {"没有"};
-            final String id=edit_id.getText().toString();
+          //  final String id=edit_id.getText().toString();
+            final String id="0";
             final String mineid=bmobUser.getObjectId();
             final String context=edit_context.getText().toString();
             myPicUpload_before();

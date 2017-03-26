@@ -44,6 +44,7 @@
         <activity android:name=".write.Writetreememory"/>
         <activity android:name=".login.SignActivity"/>
         <activity android:name=".Main.MyInfoSetting"/>
+        <activity android:name=".KeySearch.WuSearch"/>
     </application>
 
 </manifest>
