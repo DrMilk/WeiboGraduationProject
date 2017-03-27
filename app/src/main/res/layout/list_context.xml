@@ -106,21 +106,25 @@
                 android:src="@mipmap/mall_comment_photos_add"/>
         </LinearLayout>
     </LinearLayout>
-    <LinearLayout
+    <RelativeLayout
         android:layout_marginRight="14dp"
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:layout_marginTop="4dp"
-        android:gravity="right">
+        android:layout_marginTop="4dp">
         <TextView
             android:id="@+id/list_context_writer"
-            android:layout_gravity="right|center_vertical"
+            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="18249028972"
             android:theme="@style/style_about"
             android:textStyle="bold|italic"
             />
-    </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:text="哈尔滨"/>
+    </RelativeLayout>
 </LinearLayout>
 </LinearLayout>

@@ -37,27 +37,28 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.List;
 
-import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 import namewangexperiment.com.wangweibo.OnlineData.Mine;
 import namewangexperiment.com.wangweibo.OnlineData.Other;
-import namewangexperiment.com.wangweibo.OnlineData.TreeUser;
-import namewangexperiment.com.wangweibo.OnlineData.WuContext;
+import namewangexperiment.com.wangweibo.OnlineData.WangUser;
+import namewangexperiment.com.wangweibo.OnlineData.WangContext;
 import namewangexperiment.com.wangweibo.R;
+import namewangexperiment.com.wangweibo.Utils.L;
 import namewangexperiment.com.wangweibo.Utils.MySdcard;
 import namewangexperiment.com.wangweibo.Utils.MyUpload;
+import namewangexperiment.com.wangweibo.Utils.T;
+import namewangexperiment.com.wangweibo.login.LoginActivity;
 
 /**
  * Created by Administrator on 2016/11/29.
  */
 
 public class Writetreememory extends Activity {
+    private String id;
     private String MyTAG="Writetreememory";
     private Context mcontext;
     private String TAG="Writetreememory////";
@@ -85,13 +86,14 @@ public class Writetreememory extends Activity {
     private int howpic_i=0;
     private Other other_get=new Other();
     private Mine mine_get=new Mine();
-    private TreeUser bmobUser;
     private Spinner mspinner;
     private int level=0;
     private ImageView img_level;
     private WuProcessDialogSecond wuProcessDialogSecond;
     private boolean isSuccessUploadOhter=false;
-    private boolean isSuccessUploadMine=false;
+    private boolean isSuccessUploadMine=true;
+    private ArrayList<String> list_context;
+    private String objecid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,6 +145,7 @@ public class Writetreememory extends Activity {
                     case 1:img_level.setImageResource(R.mipmap.ic_alert_red);tv.setTextColor(getResources().getColor(R.color.red_level));break;
                     case 2:img_level.setImageResource(R.mipmap.ic_alert_yellow);tv.setTextColor(getResources().getColor(R.color.yello_level));break;
                     case 3:img_level.setImageResource(R.mipmap.ic_alert_bule);tv.setTextColor(getResources().getColor(R.color.blue_level));break;
+                    case 4:img_level.setImageResource(R.mipmap.ic_alert_green);tv.setTextColor(getResources().getColor(R.color.green_level));break;
                 }
             }
 
@@ -202,117 +205,118 @@ public class Writetreememory extends Activity {
         });
     }
     private boolean checkuser() {
-         bmobUser = BmobUser.getCurrentUser(TreeUser.class);
+        WangUser bmobUser = BmobUser.getCurrentUser(WangUser.class);
         if(bmobUser != null){
             // 允许用户使用应用
+            id= bmobUser.getUsername();
+            list_context=bmobUser.getList_mine();
+            objecid= (String)bmobUser.getObjectId();
+            //  text_username.setText(name);
             return true;
         }else{
+            //缓存用户对象为空时， 可打开用户注册界面…
+            Intent it=new Intent(Writetreememory.this, LoginActivity.class);
+            startActivity(it);
+            Writetreememory.this.finish();
             return false;
         }
     }
     private void goOk() {
         if(checkuser()){
             final String[] context_id_str = {"没有"};
-          //  final String id=edit_id.getText().toString();
-            final String id="0";
-            final String mineid=bmobUser.getObjectId();
             final String context=edit_context.getText().toString();
             myPicUpload_before();
-            Log.i(TAG,bmobUser.getObjectId()+"idididididi");
-            WuContext wucontext=new WuContext(bmobUser.getObjectId(),context,howpic_i,level);
+            WangContext wucontext=new WangContext(id,context,howpic_i,level,"哈尔滨");
             wucontext.save(new SaveListener<String>() {
                 @Override
                 public void done(String s, BmobException e) {
                     if(e==null){
                         context_id_str[0] =s.toString();
                         other_jundge=1;
-                        mine_jundge=1;
+                        other_jundge1=1;
                         myPicUpload(s.toString());
                         otherupdata(id,context_id_str[0]);
-                        mineupdata(mineid,context_id_str[0]);
                         Log.i(MyTAG,"上传文章成功"+s.toString());
                     }else{
                         other_jundge=2;
                         mine_jundge=2;
                         otherupdata(id,context_id_str[0]);
-                        mineupdata(mineid,context_id_str[0]);
                     }
                 }
             });
-            BmobQuery<Other> query = new BmobQuery<Other>();
-//查询playerName叫“比目”的数据
-            query.addWhereEqualTo("id",id);
-//返回50条数据，如果不加上这条语句，默认返回10条数据
-            // query.setLimit(1);
-//执行查询方法
-            query.findObjects(new FindListener<Other>() {
-                @Override
-                public void done(List<Other> object, BmobException e) {
-                    if(e==null){
-                        // toast("查询成功：共"+object.size()+"条数据。");
-                        other_jundge1=1;
-                        mine_jundge1=1;
-                        other_get=object.get(0);
-                        otherupdata(id,context_id_str[0]);
-                        Log.i(MyTAG,"成功："+other_get.getContext_id());
-//                    for (Other gameScore : object) {
-//                        //获得playerName的信息
-//                        //获得数据的objectId信息
-//                       // gameScore.getObjectId();
-//                        //获得createdAt数据创建时间（注意是：createdAt，不是createAt）
-//                        //gameScore.getCreatedAt();
+//            BmobQuery<Other> query = new BmobQuery<Other>();
+////查询playerName叫“比目”的数据
+//            query.addWhereEqualTo("id",id);
+////返回50条数据，如果不加上这条语句，默认返回10条数据
+//            // query.setLimit(1);
+////执行查询方法
+//            query.findObjects(new FindListener<Other>() {
+//                @Override
+//                public void done(List<Other> object, BmobException e) {
+//                    if(e==null){
+//                        // toast("查询成功：共"+object.size()+"条数据。");
+//                        other_jundge1=1;
+//                        mine_jundge1=1;
+//                        other_get=object.get(0);
+//                        otherupdata(id,context_id_str[0]);
 //                        Log.i(MyTAG,"成功："+other_get.getContext_id());
+////                    for (Other gameScore : object) {
+////                        //获得playerName的信息
+////                        //获得数据的objectId信息
+////                       // gameScore.getObjectId();
+////                        //获得createdAt数据创建时间（注意是：createdAt，不是createAt）
+////                        //gameScore.getCreatedAt();
+////                        Log.i(MyTAG,"成功："+other_get.getContext_id());
+////                    }
+//                    }else{
+//                        other_jundge1=2;
+//                        mine_jundge1=2;
+//                        otherupdata(id,context_id_str[0]);
+//                        Log.i(MyTAG,"失败："+e.getMessage()+","+e.getErrorCode());
 //                    }
-                    }else{
-                        other_jundge1=2;
-                        mine_jundge1=2;
-                        otherupdata(id,context_id_str[0]);
-                        Log.i(MyTAG,"失败："+e.getMessage()+","+e.getErrorCode());
-                    }
-                }
-            });
-            BmobQuery<Mine> querymine = new BmobQuery<Mine>();
-//查询playerName叫“比目”的数据
-            querymine.addWhereEqualTo("id",mineid);
-//返回50条数据，如果不加上这条语句，默认返回10条数据
-            // query.setLimit(1);
-//执行查询方法
-            querymine.findObjects(new FindListener<Mine>() {
-                @Override
-                public void done(List<Mine> object, BmobException e) {
-                    if(e==null){
-                        // toast("查询成功：共"+object.size()+"条数据。");
-                        mine_jundge1=1;
-                        mine_get=object.get(0);
-                        mineupdata(mineid,context_id_str[0]);
-                        Log.i(MyTAG,"成功："+mine_get.getContext_id());
-//                    for (Other gameScore : object) {
-//                        //获得playerName的信息
-//                        //获得数据的objectId信息
-//                       // gameScore.getObjectId();
-//                        //获得createdAt数据创建时间（注意是：createdAt，不是createAt）
-//                        //gameScore.getCreatedAt();
-//                        Log.i(MyTAG,"成功："+other_get.getContext_id());
+//                }
+//            });
+//            BmobQuery<Mine> querymine = new BmobQuery<Mine>();
+////查询playerName叫“比目”的数据
+//            querymine.addWhereEqualTo("id",mineid);
+////返回50条数据，如果不加上这条语句，默认返回10条数据
+//            // query.setLimit(1);
+////执行查询方法
+//            querymine.findObjects(new FindListener<Mine>() {
+//                @Override
+//                public void done(List<Mine> object, BmobException e) {
+//                    if(e==null){
+//                        // toast("查询成功：共"+object.size()+"条数据。");
+//                        mine_jundge1=1;
+//                        mine_get=object.get(0);
+//                        mineupdata(mineid,context_id_str[0]);
+//                        Log.i(MyTAG,"成功："+mine_get.getContext_id());
+////                    for (Other gameScore : object) {
+////                        //获得playerName的信息
+////                        //获得数据的objectId信息
+////                       // gameScore.getObjectId();
+////                        //获得createdAt数据创建时间（注意是：createdAt，不是createAt）
+////                        //gameScore.getCreatedAt();
+////                        Log.i(MyTAG,"成功："+other_get.getContext_id());
+////                    }
+//                    }else{
+//                        mine_jundge1=2;
+//                        mineupdata(mineid,context_id_str[0]);
+//                        Log.i(MyTAG,"失败："+e.getMessage()+","+e.getErrorCode());
 //                    }
-                    }else{
-                        mine_jundge1=2;
-                        mineupdata(mineid,context_id_str[0]);
-                        Log.i(MyTAG,"失败："+e.getMessage()+","+e.getErrorCode());
-                    }
-                }
-            });
+//                }
+//            });
         }
     }
 
     private void myPicUpload(String s) {
-
         switch (howpic_i){
-            case 1:myUpload.goUpload("keymanword","context/"+s+"/"+"img1",mysdcard.pathwriteimg+ File.separator+"img1.jpg");break;
-            case 2:myUpload.goUpload("keymanword","context/"+s+"/"+"img1",mysdcard.pathwriteimg+ File.separator+"img1.jpg");
-                   myUpload.goUpload("keymanword","context/"+s+"/"+"img2",mysdcard.pathwriteimg+ File.separator+"img2.jpg");break;
-            case 3:myUpload.goUpload("keymanword","context/"+s+"/"+"img1",mysdcard.pathwriteimg+ File.separator+"img1.jpg");
-                   myUpload.goUpload("keymanword","context/"+s+"/"+"img2",mysdcard.pathwriteimg+ File.separator+"img2.jpg");
-                   myUpload.goUpload("keymanword","context/"+s+"/"+"img3",mysdcard.pathwriteimg+ File.separator+"img3.jpg");;break;
+            case 1:myUpload.goUpload("wangweibodata","context/"+s+"/"+"img1",mysdcard.pathwriteimg+ File.separator+"img1.jpg");break;
+            case 2:myUpload.goUpload("wangweibodata","context/"+s+"/"+"img1",mysdcard.pathwriteimg+ File.separator+"img1.jpg");
+                   myUpload.goUpload("wangweibodata","context/"+s+"/"+"img2",mysdcard.pathwriteimg+ File.separator+"img2.jpg");break;
+            case 3:myUpload.goUpload("wangweibodata","context/"+s+"/"+"img1",mysdcard.pathwriteimg+ File.separator+"img1.jpg");
+                   myUpload.goUpload("wangweibodata","context/"+s+"/"+"img2",mysdcard.pathwriteimg+ File.separator+"img2.jpg");
+                   myUpload.goUpload("wangweibodata","context/"+s+"/"+"img3",mysdcard.pathwriteimg+ File.separator+"img3.jpg");;break;
             case 0:;break;
         }
     }
@@ -337,40 +341,43 @@ public class Writetreememory extends Activity {
     private void otherupdata(String id,String str) {
         if(other_jundge1==1&&other_jundge==1){
             Log.i(MyTAG,"-------------更新");
-            ArrayList<String> list_other=new ArrayList<String>();
-            list_other=other_get.getContext_id();
-            list_other.add(0,str);
-            //更新Person表里面id为6b6c11c537的数据，address内容更新为“北京朝阳”
-            Other pp = new Other();
-            pp.setValue("contextid_list",list_other);
-            pp.update(other_get.getObjectId(), new UpdateListener() {
+            WangUser wangUser=new WangUser();
+            if(list_context==null){
+                list_context=new ArrayList<String>();
+            }
+                list_context.add(str);
+            wangUser.setList_mine(list_context);
+            wangUser.update(objecid, new UpdateListener() {
                 @Override
                 public void done(BmobException e) {
                     if(e==null){
                         isSuccessUploadOhter=true;
                         successUpload();
-                    }else{
+                        L.i(TAG,"更爱uesr成功");
+                        T.showShot(mcontext,"上传成功！");
+                    }else {
+                        L.i(TAG,"更爱uesr失败"+e.toString());
                         failUpload();
+                        T.showShot(mcontext,"上传失败！");
                     }
                 }
-
             });
+            //更新Person表里面id为6b6c11c537的数据，address内容更新为“北京朝阳”
+//            Other pp = new Other();
+//            pp.setValue("contextid_list",list_other);
+//            pp.update(other_get.getObjectId(), new UpdateListener() {
+//                @Override
+//                public void done(BmobException e) {
+//                    if(e==null){
+//                        isSuccessUploadOhter=true;
+//                        successUpload();
+//                    }else{
+//                        failUpload();
+//                    }
+//                }
+//
+//            });
         }
-        if(other_jundge1==2&&other_jundge==1){
-            Log.i(MyTAG,"-------------重建");
-            ArrayList<String> list_other=new ArrayList<String>();
-            ArrayList<String> list_remark=new ArrayList<String>();
-            list_other.add(str);
-            Other other1=new Other(id,list_other,list_remark);
-            other1.save(new SaveListener<String>() {
-                @Override
-                public void done(String s, BmobException e) {
-                    isSuccessUploadOhter=true;
-                    successUpload();
-                }
-            });
-        }
-
     }
     private void mineupdata(String id,String str) {
         if(mine_jundge1==1&&mine_jundge==1){
@@ -811,5 +818,11 @@ public class Writetreememory extends Activity {
      */
     public static boolean isGooglePhotosUri(Uri uri) {
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
     }
 }

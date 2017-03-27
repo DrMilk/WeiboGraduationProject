@@ -6,7 +6,7 @@ import cn.bmob.v3.BmobObject;
  * Created by Administrator on 2017/2/8.
  */
 
-public class WuReward extends BmobObject{
+public class WangReward extends BmobObject{
     private boolean response_status;
     private String keyword;
     private String rcontext;
@@ -16,7 +16,7 @@ public class WuReward extends BmobObject{
     private String expire_date;
     private Integer photograph;
 
-    public WuReward(boolean response_status, String keyword, String rcontext, String response_id, String release_id, Integer rmoney, String expire_date, Integer photograph) {
+    public WangReward(boolean response_status, String keyword, String rcontext, String response_id, String release_id, Integer rmoney, String expire_date, Integer photograph) {
         this.response_status = response_status;
         this.keyword = keyword;
         this.rcontext = rcontext;

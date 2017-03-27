@@ -5,10 +5,11 @@
             <item>女</item>
         </string-array>
         <string-array name="level">
-            <item>侮辱</item>
-            <item>诽谤</item>
-            <item>歧视</item>
-            <item>撩骚</item>
+            <item>狂喜</item>
+            <item>开心</item>
+            <item>一般</item>
+            <item>难过</item>
+            <item>伤悲</item>
         </string-array>
     <string-array name="rewarddate">
         <item>7</item>

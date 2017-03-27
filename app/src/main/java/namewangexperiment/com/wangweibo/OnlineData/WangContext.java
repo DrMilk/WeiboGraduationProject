@@ -1,24 +1,29 @@
 package namewangexperiment.com.wangweibo.OnlineData;
 
+import java.util.ArrayList;
+
 import cn.bmob.v3.BmobObject;
 
 /**
  * Created by Administrator on 2017/1/12.
  */
 
-public class WuContext extends BmobObject {
+public class WangContext extends BmobObject {
     private int num;
     private String context;
     private String writename;
     private int fakelevel;
-    public WuContext(){
+    private ArrayList<String> list_remark;
+    private String address;
+    public WangContext(){
 
     }
-    public WuContext(String writename, String context,int num,int fakelevel) {
+    public WangContext(String writename, String context, int num, int fakelevel,String address) {
         this.writename=writename;
         this.context = context;
         this.num = num;
         this.fakelevel=fakelevel;
+        this.address=address;
     }
     public int getFakelevel() {
         return fakelevel;
@@ -50,5 +55,21 @@ public class WuContext extends BmobObject {
 
     public void setContext(String context) {
         this.context = context;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public ArrayList<String> getList_remark() {
+        return list_remark;
+    }
+
+    public void setList_remark(ArrayList<String> list_remark) {
+        this.list_remark = list_remark;
     }
 }

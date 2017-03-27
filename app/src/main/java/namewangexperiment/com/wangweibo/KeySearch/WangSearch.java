@@ -1,6 +1,7 @@
 package namewangexperiment.com.wangweibo.KeySearch;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -29,20 +30,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.QueryListener;
+import namewangexperiment.com.wangweibo.MainInfor.Maintab;
 import namewangexperiment.com.wangweibo.OnlineData.SystemInfoAllMore;
 import namewangexperiment.com.wangweibo.OnlineData.WangUser;
 import namewangexperiment.com.wangweibo.R;
+import namewangexperiment.com.wangweibo.Utils.L;
 import namewangexperiment.com.wangweibo.Utils.MySdcard;
+import namewangexperiment.com.wangweibo.Utils.T;
 
 
 /**
  * Created by Administrator on 2017/1/14.
  */
 
-public class WuSearch extends Activity implements View.OnClickListener{
+public class WangSearch extends Activity implements View.OnClickListener{
     private final WangUser other=new WangUser();
     private String TAG="WuSearch";
     private ListView lv;
@@ -65,6 +70,7 @@ public class WuSearch extends Activity implements View.OnClickListener{
     private LinearLayout list_footview_linear;
     private WuProcessDialog wuProcessDialog;
     private BmobQuery<SystemInfoAllMore> tam;
+    private Context mcontext;
     private ArrayList<String> list_more=new ArrayList<>();
     private Handler hander=new Handler(){
         @Override
@@ -75,13 +81,13 @@ public class WuSearch extends Activity implements View.OnClickListener{
                     list_more.get(0)+"");
                 more_text2.setText(list_more.get(1)+"");
                 more_text3.setText(list_more.get(2)+"");
-                more_text3.setTextColor(WuSearch.this.getResources().getColor(R.color.blue_level));
+                more_text3.setTextColor(WangSearch.this.getResources().getColor(R.color.blue_level));
                 more_text4.setText(list_more.get(3)+"");
-                more_text4.setTextColor(WuSearch.this.getResources().getColor(R.color.red_level));
+                more_text4.setTextColor(WangSearch.this.getResources().getColor(R.color.red_level));
                 more_text5.setText(list_more.get(4)+"");
-                more_text5.setTextColor(WuSearch.this.getResources().getColor(R.color.green_level));
+                more_text5.setTextColor(WangSearch.this.getResources().getColor(R.color.green_level));
                 more_text6.setText(list_more.get(5)+"");
-                more_text6.setTextColor(WuSearch.this.getResources().getColor(R.color.yello_level));
+                more_text6.setTextColor(WangSearch.this.getResources().getColor(R.color.yello_level));
                 more_text7.setText(list_more.get(6)+"");
                 more_text8.setText(list_more.get(7)+"");
                 list_footview_linear.setVisibility(View.VISIBLE);}
@@ -92,10 +98,11 @@ public class WuSearch extends Activity implements View.OnClickListener{
         setOnHead();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+        mcontext=this;
         read();
         initView();
         initfootView();
-        findTreeAllMore("fzPY888M");
+        findTreeAllMore("FMtX2227");
     }
 
     private void initfootView() {
@@ -155,7 +162,7 @@ public class WuSearch extends Activity implements View.OnClickListener{
                 }
             }
         });
-        wuProcessDialog=new WuProcessDialog(WuSearch.this);
+        wuProcessDialog=new WuProcessDialog(WangSearch.this);
         wuProcessDialog.setCanceledOnTouchOutside(false);
         sv= (SearchView) findViewById(R.id.search_view);
         sv.setQueryHint("微博地址");
@@ -241,19 +248,20 @@ public class WuSearch extends Activity implements View.OnClickListener{
             @Override
             public void done(List<WangUser> object,BmobException e) {
                 if(e==null){
+                    WangUser bmobUser= (WangUser) object.get(0);
 //                    Toast.makeText(WuSearch.this,"找到"+object.get(0).getId(),Toast.LENGTH_SHORT).show();
 //                    WangUser otherCopy=new WangUser(object.get(0).getId(),object.get(0).getContext_id());
 //                    otherCopy.setRemarkid_list(object.get(0).getRemarkid_list());
 //                    otherCopy.setRewardid_list(object.get(0).getRewardid_list());
-//                    Intent it=new Intent(WuSearch.this, Maintab.class);
-//                    Bundle bundle=new Bundle();
-//                    bundle.putSerializable("othercopy",otherCopy);
-//                    bundle.putString("objectid",object.get(0).getObjectId());
-//                    it.putExtras(bundle);
-//                    startActivity(it);
+                    Intent it=new Intent(WangSearch.this, Maintab.class);
+                    Bundle bundle=new Bundle();
+                    bundle.putSerializable("wanguesr",bmobUser);
+                    it.putExtras(bundle);
+                    startActivity(it);
+                    L.i(TAG,"找到该用户");
                 }else{
-                    Toast.makeText(WuSearch.this,"没有该用户",Toast.LENGTH_SHORT).show();
-                    Log.i("bmob","失败："+e.getMessage()+","+e.getErrorCode());
+                    L.i(TAG,"没有该用户"+e.toString());
+                    T.showShot(mcontext,"没找到该用户");
                 }
                 wuProcessDialog.dismiss();
             }

@@ -6,18 +6,18 @@ import cn.bmob.v3.BmobObject;
  * Created by Administrator on 2017/1/12.
  */
 
-public class WuRemark extends BmobObject {
+public class WangRemark extends BmobObject {
     private String context;
     private String writename;
     private int greatpeoplo;
     private int badpeople;
-    public WuRemark(String context, String writename, int greatpeoplo, int badpeople) {
+    public WangRemark(String context, String writename, int greatpeoplo, int badpeople) {
         this.context = context;
         this.writename = writename;
         this.greatpeoplo = greatpeoplo;
         this.badpeople = badpeople;
     }
-    public WuRemark(){}
+    public WangRemark(){}
     public String getContext() {
         return context;
     }

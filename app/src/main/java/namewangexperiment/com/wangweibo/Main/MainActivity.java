@@ -20,7 +20,7 @@ import android.widget.RelativeLayout;
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobConfig;
 import cn.bmob.v3.BmobUser;
-import namewangexperiment.com.wangweibo.OnlineData.TreeUser;
+import namewangexperiment.com.wangweibo.KeySearch.WangSearch;
 import namewangexperiment.com.wangweibo.R;
 import namewangexperiment.com.wangweibo.Utils.SharePreferenceUtil;
 import namewangexperiment.com.wangweibo.login.LoginActivity;
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         mcontext=this;
         initView();
-        //mbmobinitdata();
+     //   mbmobinitdata();
     }
 
     private void initView() {
@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             SharePreferenceUtil.putSettingDataBoolean(mcontext,SharePreferenceUtil.AUTOLOGIN,false);
+            BmobUser.logOut();
             Intent it=new Intent(MainActivity.this, LoginActivity.class);startActivity(it);MainActivity.this.finish();
             return true;
         }
@@ -111,7 +112,7 @@ public class MainActivity extends AppCompatActivity
             Intent it=new Intent(MainActivity.this, Writetreememory.class);
             startActivity(it);
         } else if (id == R.id.nav_search) {
-            Intent it=new Intent(MainActivity.this, Writetreememory.class);
+            Intent it=new Intent(MainActivity.this, WangSearch.class);
             startActivity(it);
         } else if (id == R.id.nav_minetab) {
             Intent it=new Intent(MainActivity.this, SettingActivity.class);
@@ -127,20 +128,6 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-    private boolean checkuser() {
-        TreeUser bmobUser = BmobUser.getCurrentUser(TreeUser.class);
-        if(bmobUser != null){
-            // 允许用户使用应用
-            String name= (String) BmobUser.getObjectByKey("treename");
-            //text_username.setText(name);
-            return true;
-        }else{
-            //缓存用户对象为空时， 可打开用户注册界面…
-            Intent it=new Intent(this,LoginActivity.class);
-            startActivity(it);
-            return false;
-        }
     }
     private void mbmobinitdata() {
         Bmob.initialize(this, "99dd404fe87588c447057b2a1d533eee");

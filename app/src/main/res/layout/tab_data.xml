@@ -62,7 +62,7 @@
                     android:layout_width="160dp"
                     android:layout_height="160dp"
                     android:layout_gravity="left|center_vertical">
-                    <treememory.com.treememory.MainInfor.WuCircularStatistics
+                    <namewangexperiment.com.wangweibo.MainInfor.WangCircularStatistics
                         android:id="@+id/tab_data_circle"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
@@ -92,7 +92,7 @@
                                 android:layout_marginRight="8dp"
                                 android:layout_marginBottom="2dp"/>
                             <TextView
-                                android:text="侮辱"
+                                android:text="狂喜"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="14sp"
@@ -142,7 +142,7 @@
                                 android:layout_marginRight="8dp"
                                 android:layout_marginBottom="2dp"/>
                             <TextView
-                                android:text="诽谤"
+                                android:text="开心"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="14sp"
@@ -192,7 +192,7 @@
                                 android:layout_marginRight="8dp"
                                 android:layout_marginBottom="2dp"/>
                             <TextView
-                                android:text="撩骚"
+                                android:text="一般"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="14sp"
@@ -242,7 +242,7 @@
                                 android:layout_marginRight="8dp"
                                 android:layout_marginBottom="2dp"/>
                             <TextView
-                                android:text="歧视"
+                                android:text="难过"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="14sp"
@@ -259,6 +259,56 @@
                             <TextView
                                 android:layout_marginLeft="10dp"
                                 android:id="@+id/tab_data_qishi"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:theme="@style/style_about"
+                                android:textSize="14sp"
+                                android:textStyle="italic"/>
+                            <TextView
+                                android:text=" 条"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:theme="@style/style_about"
+                                android:textSize="14sp"
+                                android:textStyle="normal"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                    <!-- 分类五 -->
+                    <LinearLayout
+                        android:layout_marginTop="6dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:layout_gravity="right"
+                        android:gravity="center_vertical">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="bottom">
+                            <ImageView
+                                android:layout_width="14dp"
+                                android:layout_height="14dp"
+                                android:src="@mipmap/ic_alert_green"
+                                android:layout_marginRight="8dp"
+                                android:layout_marginBottom="2dp"/>
+                            <TextView
+                                android:text="伤悲"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/green_level"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            android:gravity="right|bottom"
+                            android:layout_marginRight="30dp">
+                            <TextView
+                                android:layout_marginLeft="10dp"
+                                android:id="@+id/tab_data_shangbei"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:theme="@style/style_about"
@@ -316,11 +366,11 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="16dp"
                 android:layout_marginLeft="20dp">
-                <treememory.com.treememory.MainInfor.WuTagCloudLayout
+                <namewangexperiment.com.wangweibo.MainInfor.WangTagCloudLayout
                     android:layout_width="340dp"
                     android:layout_height="200dp"
                     android:id="@+id/tab_data_WuTagCloudLayout">
-                </treememory.com.treememory.MainInfor.WuTagCloudLayout>
+                </namewangexperiment.com.wangweibo.MainInfor.WangTagCloudLayout>
             </FrameLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

@@ -20,6 +20,7 @@ public class WangUser extends BmobUser implements Serializable {
     private String passwordshow;
     private ArrayList<String> list_collect;
     private ArrayList<String> list_mine;
+    private ArrayList<String> list_remark;
     public WangUser(){}
 
     public String getSex() {
@@ -92,5 +93,13 @@ public class WangUser extends BmobUser implements Serializable {
 
     public void setList_mine(ArrayList<String> list_mine) {
         this.list_mine = list_mine;
+    }
+
+    public ArrayList<String> getList_remark() {
+        return list_remark;
+    }
+
+    public void setList_remark(ArrayList<String> list_remark) {
+        this.list_remark = list_remark;
     }
 }
