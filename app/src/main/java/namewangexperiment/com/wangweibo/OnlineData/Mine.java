@@ -62,4 +62,5 @@ public class Mine extends BmobObject {
     public void setRewardid_list(ArrayList<String> rewardid_list) {
         this.rewardid_list = rewardid_list;
     }
+
 }

@@ -34,7 +34,7 @@ import namewangexperiment.com.wangweibo.wustringparsing.MyUrlGet;
  * Created by Administrator on 2017/2/13.
  */
 
-public class WuUrlGetString {
+public class WangUrlGetString {
     private final int HANDER_SET_SEX=9;
     private final int HANDER_SET_ATTNUMS=8;
     private final int HANDER_SET_FANS=7;
@@ -74,7 +74,7 @@ public class WuUrlGetString {
           //  textView.setText(result);
         }
     };
-    public WuUrlGetString(String url_address){
+    public WangUrlGetString(String url_address){
         this.url_address=url_address;
         try {
             // 1 创建一个URL对象

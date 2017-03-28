@@ -15,13 +15,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobConfig;
 import cn.bmob.v3.BmobUser;
 import namewangexperiment.com.wangweibo.KeySearch.WangSearch;
+import namewangexperiment.com.wangweibo.OnlineData.WangUser;
 import namewangexperiment.com.wangweibo.R;
+import namewangexperiment.com.wangweibo.Utils.L;
+import namewangexperiment.com.wangweibo.Utils.MyUpload;
 import namewangexperiment.com.wangweibo.Utils.SharePreferenceUtil;
 import namewangexperiment.com.wangweibo.login.LoginActivity;
 import namewangexperiment.com.wangweibo.write.Writetreememory;
@@ -31,13 +36,19 @@ public class MainActivity extends AppCompatActivity
     private String TAG="MainActivity";
     private Context mcontext;
     private RelativeLayout head_rl;
+    private WangUser wangUser;
+    private ImageView image_head;
+    private TextView tv_name;
+    private TextView tv_sign;
+    private MyUpload myUpload;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mcontext=this;
+        myUpload=new MyUpload(mcontext);
         initView();
-     //   mbmobinitdata();
+     // mbmobinitdata();
     }
 
     private void initView() {
@@ -61,9 +72,14 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        View view_head= LayoutInflater.from(this).inflate(R.layout.nav_header_main,null);
+        View view_head= navigationView.getHeaderView(0);
         head_rl= (RelativeLayout) view_head.findViewById(R.id.header_headimg_main_bg);
+        image_head= (ImageView) view_head.findViewById(R.id.header_headimg);
+        tv_name= (TextView) view_head.findViewById(R.id.header_name);
+        tv_sign= (TextView) view_head.findViewById(R.id.header_sign);
+        image_head.setImageResource(R.mipmap.ic_alert_green);
         head_rl.setOnClickListener(this);
+        image_head.setOnClickListener(this);
     }
 
     @Override
@@ -118,7 +134,7 @@ public class MainActivity extends AppCompatActivity
             Intent it=new Intent(MainActivity.this, SettingActivity.class);
             startActivity(it);
         } else if (id == R.id.nav_manage) {
-
+            Intent it1=new Intent(MainActivity.this,PersonaldActivity.class);startActivity(it1);
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
@@ -144,11 +160,47 @@ public class MainActivity extends AppCompatActivity
                 .build();
         Bmob.initialize(config);
     }
-
+    private boolean checkuser() {
+        WangUser bmobUser = BmobUser.getCurrentUser(WangUser.class);
+        if(bmobUser != null){
+            wangUser=bmobUser;
+            //  text_username.setText(name);
+            return true;
+        }else{
+            //缓存用户对象为空时， 可打开用户注册界面…
+            Intent it=new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(it);
+            MainActivity.this.finish();
+            return false;
+        }
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.header_headimg_main_bg:;break;
+            case R.id.header_headimg_main_bg:
+                Intent it=new Intent(MainActivity.this,PersonaldActivity.class);startActivity(it);
+                break;
+            case R.id.header_headimg:
+                L.i(TAG,"点了吗！");
+                Intent it1=new Intent(MainActivity.this,PersonaldActivity.class);startActivity(it1);
+                break;
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(checkuser()){
+            tv_name.setText(wangUser.getName());
+            String sign=wangUser.getSign();
+            if(sign!=null){
+                tv_sign.setText(sign);
+            }
+            if(wangUser.isImgheadstutas()){
+                myUpload.download_asynchronous("wangweibodata", "headimg/" + wangUser.getUsername(),image_head);
+                L.i(TAG,"不会没更新投降吧！");
+            }
+        }
+
     }
 }

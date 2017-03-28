@@ -72,28 +72,33 @@ public class WangContextRecyclerViewAdapter extends RecyclerView.Adapter<WangCon
             switch (list_context.get(position).getFakelevel()) {
                 case 0:
                     wuViewHolder.level_img.setImageResource(R.mipmap.ic_alert_purple);
-                    wuViewHolder.level.setText("侮辱");
-                    wuViewHolder.level.setText("侮辱");
+                    wuViewHolder.level.setText("狂喜");
                     wuViewHolder.level.setTextColor(mcontext.getResources().getColor(R.color.purple_level));
                     wuViewHolder.context_text.setTextColor(mcontext.getResources().getColor(R.color.purple_level));
                     break;   //设置颜色break;
                 case 1:
                     wuViewHolder.level_img.setImageResource(R.mipmap.ic_alert_red);
-                    wuViewHolder.level.setText("诽谤");
+                    wuViewHolder.level.setText("开心");
                     wuViewHolder.level.setTextColor(mcontext.getResources().getColor(R.color.red_level));
                     wuViewHolder.context_text.setTextColor(mcontext.getResources().getColor(R.color.red_level));
                     break;
                 case 2:
                     wuViewHolder.level_img.setImageResource(R.mipmap.ic_alert_yellow);
-                    wuViewHolder.level.setText("歧视");
+                    wuViewHolder.level.setText("一般");
                     wuViewHolder.level.setTextColor(mcontext.getResources().getColor(R.color.yello_level));
                     wuViewHolder.context_text.setTextColor(mcontext.getResources().getColor(R.color.yello_level));
                     break;
                 case 3:
                     wuViewHolder.level_img.setImageResource(R.mipmap.ic_alert_bule);
-                    wuViewHolder.level.setText("撩骚");
+                    wuViewHolder.level.setText("难过");
                     wuViewHolder.level.setTextColor(mcontext.getResources().getColor(R.color.blue_level));
                     wuViewHolder.context_text.setTextColor(mcontext.getResources().getColor(R.color.blue_level));
+                    break;
+                case 4:
+                    wuViewHolder.level_img.setImageResource(R.mipmap.ic_alert_green);
+                    wuViewHolder.level.setText("伤悲");
+                    wuViewHolder.level.setTextColor(mcontext.getResources().getColor(R.color.green_level));
+                    wuViewHolder.context_text.setTextColor(mcontext.getResources().getColor(R.color.green_level));
                     break;
             }
             switch (list_context.get(position).getNum()) {
@@ -102,7 +107,7 @@ public class WangContextRecyclerViewAdapter extends RecyclerView.Adapter<WangCon
                     break;
                 case 1:
                     wuViewHolder.img1.setTag(list_context.get(position).getObjectId()+"_img1");
-                    myUpload.download_asynchronous("keymanword", "context/" + list_context.get(position).getObjectId() + "/" + "img1", wuViewHolder.img1);
+                    myUpload.download_asynchronous("wangweibodata", "context/" + list_context.get(position).getObjectId() + "/" + "img1", wuViewHolder.img1);
                     wuViewHolder.img1.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -116,17 +121,17 @@ public class WangContextRecyclerViewAdapter extends RecyclerView.Adapter<WangCon
                 case 2:
                     wuViewHolder.img1.setTag(list_context.get(position).getObjectId()+"_img1");
                     wuViewHolder.img2.setTag(list_context.get(position).getObjectId()+"_img2");
-                    myUpload.download_asynchronous("keymanword", "context/" + list_context.get(position).getObjectId() + "/" + "img1", wuViewHolder.img1);
-                    myUpload.download_asynchronous("keymanword", "context/" + list_context.get(position).getObjectId() + "/" + "img2", wuViewHolder.img2);
+                    myUpload.download_asynchronous("wangweibodata", "context/" + list_context.get(position).getObjectId() + "/" + "img1", wuViewHolder.img1);
+                    myUpload.download_asynchronous("wangweibodata", "context/" + list_context.get(position).getObjectId() + "/" + "img2", wuViewHolder.img2);
                     wuViewHolder.img3.setVisibility(View.INVISIBLE);
                     break;
                 case 3:
                     wuViewHolder.img1.setTag(list_context.get(position).getObjectId()+"_img1");
                     wuViewHolder.img2.setTag(list_context.get(position).getObjectId()+"_img2");
                     wuViewHolder.img3.setTag(list_context.get(position).getObjectId()+"_img3");
-                    myUpload.download_asynchronous("keymanword", "context/" + list_context.get(position).getObjectId() + "/" + "img1", wuViewHolder.img1);
-                    myUpload.download_asynchronous("keymanword", "context/" + list_context.get(position).getObjectId() + "/" + "img2", wuViewHolder.img2);
-                    myUpload.download_asynchronous("keymanword", "context/" + list_context.get(position).getObjectId() + "/" + "img3", wuViewHolder.img3);
+                    myUpload.download_asynchronous("wangweibodata", "context/" + list_context.get(position).getObjectId() + "/" + "img1", wuViewHolder.img1);
+                    myUpload.download_asynchronous("wangweibodata", "context/" + list_context.get(position).getObjectId() + "/" + "img2", wuViewHolder.img2);
+                    myUpload.download_asynchronous("wangweibodata", "context/" + list_context.get(position).getObjectId() + "/" + "img3", wuViewHolder.img3);
                     break;
             }
 //        }

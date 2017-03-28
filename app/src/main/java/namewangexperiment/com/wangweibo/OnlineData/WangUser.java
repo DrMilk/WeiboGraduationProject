@@ -18,9 +18,16 @@ public class WangUser extends BmobUser implements Serializable {
     private String wechat;
     private String address;
     private String passwordshow;
+    private String sign;
+    private int fans;
+    private int attentions;
+    private boolean imgheadstutas;
     private ArrayList<String> list_collect;
     private ArrayList<String> list_mine;
     private ArrayList<String> list_remark;
+    private ArrayList<String> list_reward;
+    private ArrayList<String> list_fans;
+    private ArrayList<String> list_attention;
     public WangUser(){}
 
     public String getSex() {
@@ -101,5 +108,61 @@ public class WangUser extends BmobUser implements Serializable {
 
     public void setList_remark(ArrayList<String> list_remark) {
         this.list_remark = list_remark;
+    }
+
+    public ArrayList<String> getList_reward() {
+        return list_reward;
+    }
+
+    public void setList_reward(ArrayList<String> list_reward) {
+        this.list_reward = list_reward;
+    }
+
+    public String getSign() {
+        return sign;
+    }
+
+    public void setSign(String sign) {
+        this.sign = sign;
+    }
+
+    public int getFans() {
+        return fans;
+    }
+
+    public void setFans(int fans) {
+        this.fans = fans;
+    }
+
+    public int getAttentions() {
+        return attentions;
+    }
+
+    public void setAttentions(int attentions) {
+        this.attentions = attentions;
+    }
+
+    public ArrayList<String> getList_fans() {
+        return list_fans;
+    }
+
+    public void setList_fans(ArrayList<String> list_fans) {
+        this.list_fans = list_fans;
+    }
+
+    public ArrayList<String> getList_attention() {
+        return list_attention;
+    }
+
+    public void setList_attention(ArrayList<String> list_attention) {
+        this.list_attention = list_attention;
+    }
+
+    public boolean isImgheadstutas() {
+        return imgheadstutas;
+    }
+
+    public void setImgheadstutas(boolean imgheadstutas) {
+        this.imgheadstutas = imgheadstutas;
     }
 }

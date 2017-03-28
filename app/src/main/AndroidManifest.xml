@@ -46,6 +46,7 @@
         <activity android:name=".Main.MyInfoSetting"/>
         <activity android:name=".KeySearch.WangSearch"/>
         <activity android:name=".MainInfor.Maintab"/>
+        <activity android:name=".Main.PersonaldActivity"/>
     </application>
 
 </manifest>

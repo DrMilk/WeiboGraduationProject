@@ -10,10 +10,10 @@ import java.util.List;
  * Created by Administrator on 2017/1/18.
  */
 
-public class WuViewpagerAdapter extends PagerAdapter {
+public class WangViewpagerAdapter extends PagerAdapter {
     private List<View> mViewList;
     private List<String> mTitleList;
-    public WuViewpagerAdapter(List<View> mViewList,List<String> mTitleList) {
+    public WangViewpagerAdapter(List<View> mViewList, List<String> mTitleList) {
         this.mViewList = mViewList;
         this.mTitleList=mTitleList;
     }

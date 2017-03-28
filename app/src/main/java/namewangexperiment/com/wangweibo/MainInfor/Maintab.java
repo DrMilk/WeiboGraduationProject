@@ -54,6 +54,7 @@ import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 import namewangexperiment.com.wangweibo.Main.WangBannerPageTransformer;
 import namewangexperiment.com.wangweibo.OnlineData.WangContext;
 import namewangexperiment.com.wangweibo.OnlineData.WangRemark;
@@ -91,7 +92,7 @@ public class Maintab extends Activity{
     private TextView text_qishi;
     private TextView text_liaosao;
     private TextView text_feibang;
-    private TextView text_sad;
+    private TextView text_shangbei;
     private LinearLayout context_loading_linear;
     private LinearLayout data_loading_linear;
     private RecyclerView recyclerView_remark;
@@ -109,7 +110,7 @@ public class Maintab extends Activity{
     private boolean remark_bottom_status=true;
     private boolean stausa=true;
     WangCircularStatistics wucircle;
-    private int[] level_count=new int[]{1,1,1,1};
+    private int[] level_count=new int[]{1,1,1,1,1};
     private int collapsing_heigh=0;
     private int collapsing_width=0;
     private float collapsing_Y=0;
@@ -207,7 +208,7 @@ public class Maintab extends Activity{
         wuTagCloudLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent it=new Intent(Maintab.this, WuRewardWallet.class);
+//                Intent it=new Intent(Maintab.this, WangRewardWallet.class);
 //                Bundle bundle=new Bundle();
 //                bundle.putString("weiboId",other.getId());
 //                bundle.putSerializable("otherCopy",other);
@@ -247,6 +248,7 @@ public class Maintab extends Activity{
         Intent it=getIntent();
         Bundle bundle=it.getExtras();
         other= (WangUser) bundle.getSerializable("wanguesr");
+         mObjectId=bundle.getString("objectid");
         Log.i(TAG,"are you crazy?"+other.getObjectId());
         //textview.setText(other.getId());
         mInflater=LayoutInflater.from(this);
@@ -285,7 +287,7 @@ public class Maintab extends Activity{
         text_qishi= (TextView) view_data.findViewById(R.id.tab_data_qishi);
         text_liaosao= (TextView) view_data.findViewById(R.id.tab_data_liaosao);
         text_feibang= (TextView) view_data.findViewById(R.id.tab_data_feibang);
-        text_sad= (TextView) view_data.findViewById(R.id.tab_data_shangbei);
+        text_shangbei= (TextView) view_data.findViewById(R.id.tab_data_shangbei);
         wucircle= (WangCircularStatistics) view_data.findViewById(R.id.tab_data_circle);
         ctl= (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         maintab_bg= (ImageView) findViewById(R.id.maintab_bg);
@@ -327,6 +329,16 @@ public class Maintab extends Activity{
         TextView tvmblog= (TextView) findViewById(R.id.maintab_mblog);
         TextView tvfuns= (TextView) findViewById(R.id.maintab_funs);
         ImageView imgsex= (ImageView) findViewById(R.id.maintab_sex);
+//        WangUrlGetString wuUrlGetString=new WangUrlGetString("http://weibo.com/"+"5242909969"+"/profile?topnav=1&wvr=6&is_all=1");
+//        Log.i(TAG,"http://weibo.com/"+mObjectId+"/profile?topnav=1&wvr=6&is_all=1");
+//        wuUrlGetString.setTextMblog(tvmblog);
+//        wuUrlGetString.setTextfun(tvfuns);
+//        wuUrlGetString.setTextName(tvname);
+//        wuUrlGetString.setTextDescription(tvdescription);
+//        wuUrlGetString.setImagebg(maintab_bg);
+//        wuUrlGetString.setImagehead(img_head);
+//        wuUrlGetString.setImagesex(imgsex);
+//        wuUrlGetString.requestURLString();
        // wuUrlGetString.setUrlImage("http://tva4.sinaimg.cn/crop.0.0.1080.1080.127/68690a6cjw8esw2dzuic7j20u00u0go6.jpg",maintab_bg);
        // wuUrlGetString.getHtml("http://weibo.com/5242909969/profile?topnav=1&wvr=6&is_all=1","post",100500);
         //加载动画
@@ -364,7 +376,7 @@ public class Maintab extends Activity{
         mTabLayout.addTab(mTabLayout.newTab().setText(list_title.get(0)));
         mTabLayout.addTab(mTabLayout.newTab().setText(list_title.get(1)));
         mTabLayout.addTab(mTabLayout.newTab().setText(list_title.get(2)));
-        WuViewpagerAdapter mAdapter=new WuViewpagerAdapter(list_view,list_title);
+        WangViewpagerAdapter mAdapter=new WangViewpagerAdapter(list_view,list_title);
         mViewPager.setAdapter(mAdapter);
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -411,7 +423,7 @@ public class Maintab extends Activity{
                                 Log.i(TAG,"成功了！！！！！！"+tab_remark_edit.getText().toString()+user_id);
                                 Snackbar.make(view_remark,"评论成功！", Snackbar.LENGTH_SHORT).show();
                                 other_jundge=1;
-                                otherupdata(mObjectId,s.toString());
+                             //   otherupdata(mObjectId,s.toString());
                             }else{
                                 Log.i(TAG,"出错了？？？？？？");
                                 other_jundge=2;
@@ -469,7 +481,7 @@ public class Maintab extends Activity{
 //            });
 //        }
             //initData();
-            //findreward();
+            findreward();
             wuRemarkRecycleAdapter.setOnRecyclerGreatClickListener(new WangRemarkRecycleAdapter.OnRecyclerGreatClickListener() {
                 @Override
                 public void onGreatClick(WangRemarkRecycleAdapter.MyViewHolder view, int postion) {
@@ -575,7 +587,8 @@ public class Maintab extends Activity{
         text_qishi.setText(level_count[2]+"");
         text_liaosao.setText(level_count[3]+"");
         text_feibang.setText(level_count[1]+"");
-        wucircle.setListData(new int[]{level_count[0],level_count[1],level_count[3],level_count[2]});
+        text_shangbei.setText(level_count[4]+"");
+        wucircle.setListData(new int[]{level_count[0],level_count[1],level_count[3],level_count[2],level_count[4]});
         wucircle.invalidate();
         data_loading_linear.setVisibility(View.INVISIBLE);
     }
@@ -603,48 +616,48 @@ public class Maintab extends Activity{
         }
         return file;
     }
-//    private void updatareward(){
-//        WangRemark wureward=new WangRemark(false,"工资多少","他骂我妈","110","120",23,"wf",2);
-//        wureward.save(new SaveListener<String>() {
-//            @Override
-//            public void done(String s, BmobException e) {
-//                if(e==null){
-//                }
-//            }
-//        });
-//    }
-//    private void findreward(){
-//        list_reward_str=new ArrayList<>();
-//        Log.i(TAG," zhixingdaozhebule");
-//        if(other.getRewardid_list()!=null){
-//            list_reward_str=other.getRewardid_list();
-//            Log.i(TAG,list_reward_str.size()+"list_reward_stref");
-//        }else {
-//            Log.i(TAG," chucisnxvuioerge");
-//        }
-//        final String[] a = new String[1];
-//        BmobQuery<WuReward> query_reward;
-//        for(int i=0;i<list_reward_str.size();i++){
-//            query_reward = new BmobQuery<WuReward>();
-//            Log.i(TAG,list_reward_str.get(i)+" list_reward_str.get(i)");
-//            query_reward.getObject(list_reward_str.get(i), new QueryListener<WuReward>() {
-//                @Override
-//                public void done(WuReward object, BmobException e) {
-//                    if(e==null){
-//                        list_reward.add(object);
-//                        Log.i(TAG,list_reward.size()+"ef");
-//                        if(list_reward.size()== list_reward_str.size()){
-//                            updataReward();
-//                            Log.i(TAG,list_reward.size()+"ef"+list_reward_str.size());
-//                        }
-//                    }else{
-//                        Log.i("bmob","失败："+e.getMessage()+","+e.getErrorCode());
-//                    }
-//                }
-//
-//            });
-//        }
-//    }
+    private void updatareward(){
+        WangReward wureward=new WangReward(false,"工资多少","他骂我妈","110","120",23,"wf",2);
+        wureward.save(new SaveListener<String>() {
+            @Override
+            public void done(String s, BmobException e) {
+                if(e==null){
+                }
+            }
+        });
+    }
+    private void findreward(){
+        list_reward_str=new ArrayList<>();
+        Log.i(TAG," zhixingdaozhebule");
+        if(other.getList_reward()!=null){
+            list_reward_str=other.getList_reward();
+            Log.i(TAG,list_reward_str.size()+"list_reward_stref");
+        }else {
+            Log.i(TAG," chucisnxvuioerge");
+        }
+        final String[] a = new String[1];
+        BmobQuery<WangReward> query_reward;
+        for(int i=0;i<list_reward_str.size();i++){
+            query_reward = new BmobQuery<WangReward>();
+            Log.i(TAG,list_reward_str.get(i)+" list_reward_str.get(i)");
+            query_reward.getObject(list_reward_str.get(i), new QueryListener<WangReward>() {
+                @Override
+                public void done(WangReward object, BmobException e) {
+                    if(e==null){
+                        list_reward.add(object);
+                        Log.i(TAG,list_reward.size()+"ef");
+                        if(list_reward.size()== list_reward_str.size()){
+                            updataReward();
+                            Log.i(TAG,list_reward.size()+"ef"+list_reward_str.size());
+                        }
+                    }else{
+                        Log.i("bmob","失败："+e.getMessage()+","+e.getErrorCode());
+                    }
+                }
+
+            });
+        }
+    }
 
     private void updataReward() {
         initData();
@@ -654,6 +667,7 @@ public class Maintab extends Activity{
         WangUser bmobUser = BmobUser.getCurrentUser(WangUser.class);
         if(bmobUser != null){
             // 允许用户使用应用
+           // user_id=bmobUser.getObjectId();
             return true;
         }else{
             //缓存用户对象为空时， 可打开用户注册界面…
@@ -662,9 +676,57 @@ public class Maintab extends Activity{
             return false;
         }
     }
-    private void otherupdata(String id,String str) {
-
-    }
+//    private void otherupdata(String id,String str) {
+//        boolean have_bl=true;
+//        ArrayList<String> list_remark=new ArrayList<String>();
+//        if(other_jundge==1){
+//            if(other.getList_remark()==null){
+//                Log.i(TAG,"出错了 null？");
+//                have_bl=false;
+//            }else{
+//                list_remark=other.getList_remark();
+//            }
+////            if(other.getRemarkid_list().size()==0){
+////                Log.i(TAG,"出错了？000？");
+////            }
+//            if(have_bl){
+//                if(list_remark!=null&&list_remark.size()!=0){
+//                    list_remark.add(0,str);
+//                    //更新Person表里面id为6b6c11c537的数据，address内容更新为“北京朝阳”
+//                    Other pp = new Other();
+//                    pp.setValue("remarkid_list",list_remark);
+//                    Log.i(TAG,"id"+id);
+//                    pp.update(id, new UpdateListener() {
+//                        @Override
+//                        public void done(BmobException e) {
+//                            if(e==null){
+//                                Log.i(TAG,"更新成功了？？？");
+//                            }else{
+//                                Log.i(TAG,"更新出错了？？？"+e.getErrorCode()+e.toString());
+//                            }
+//                        }
+//
+//                    });
+//                }
+//            }else {
+//                Log.i(TAG,"更新没有");
+//                list_remark = new ArrayList<String>();
+//                list_remark.add(0,str);
+//                //更新Person表里面id为6b6c11c537的数据，address内容更新为“北京朝阳”
+//                Other pp = new Other();
+//                pp.setValue("remarkid_list",list_remark);
+//                pp.update(id, new UpdateListener() {
+//                    @Override
+//                    public void done(BmobException e) {
+//                        if(e==null){
+//                        }else{
+//                        }
+//                    }
+//
+//                });}
+//            Log.i(TAG,"更新没有啊");
+//        }
+//    }
     /**
      * 显示工具栏
      */
@@ -690,11 +752,11 @@ public class Maintab extends Activity{
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.popupwindow_collection:break;//收藏
-                case R.id.popupwindow_frinend_circle:T.showShot(context,"- 暂未实现此接口 -");break;//生活圈
+                case R.id.popupwindow_frinend_circle:
+                    T.showShot(context,"- 暂未实现此接口 -");break;//生活圈
                 case R.id.popupwindow_info:break;//基本信息
                 case R.id.popupwindow_link:ClipboardManager cm= (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);cm.setText(MyUrlGet.getWeiboLink(mObjectId));T.showShot(context,"- 已复制 -");break;//复制链接
-                case R.id.popupwindow_qq:
-                    T.showShot(context,"- 暂未实现此接口 -");break;//QQ
+                case R.id.popupwindow_qq:T.showShot(context,"- 暂未实现此接口 -");break;//QQ
                 case R.id.popupwindow_qzone:T.showShot(context,"- 暂未实现此接口 -");break;//QQ空间
                 case R.id.popupwindow_reward:break;//悬赏
                 case R.id.popupwindow_url:Intent it=new Intent(Intent.ACTION_VIEW);
@@ -736,6 +798,9 @@ public class Maintab extends Activity{
         //params.alpha=1f;
         //this.getWindow().setAttributes(params);
     }
+//    public OtherCopy getOther(){
+//        return other;
+//    }
     @Override
     protected void onStart() {
         collapsing_heigh=maintab_bg.getHeight();
