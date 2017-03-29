@@ -95,6 +95,8 @@ public class WangUser extends BmobUser implements Serializable {
     }
 
     public ArrayList<String> getList_mine() {
+        if(list_mine==null)
+            return new ArrayList<String>();
         return list_mine;
     }
 
@@ -103,6 +105,8 @@ public class WangUser extends BmobUser implements Serializable {
     }
 
     public ArrayList<String> getList_remark() {
+        if(list_remark==null)
+            return new ArrayList<String>();
         return list_remark;
     }
 
@@ -111,6 +115,8 @@ public class WangUser extends BmobUser implements Serializable {
     }
 
     public ArrayList<String> getList_reward() {
+        if(list_reward==null)
+            return new ArrayList<String>();
         return list_reward;
     }
 
@@ -143,6 +149,8 @@ public class WangUser extends BmobUser implements Serializable {
     }
 
     public ArrayList<String> getList_fans() {
+        if(list_fans==null)
+            return new ArrayList<String>();
         return list_fans;
     }
 
@@ -151,6 +159,8 @@ public class WangUser extends BmobUser implements Serializable {
     }
 
     public ArrayList<String> getList_attention() {
+        if(list_attention==null)
+            return new ArrayList<String>();
         return list_attention;
     }
 

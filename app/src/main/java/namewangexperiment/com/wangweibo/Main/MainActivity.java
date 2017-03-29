@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -16,18 +19,35 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobConfig;
+import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.QueryListener;
 import namewangexperiment.com.wangweibo.KeySearch.WangSearch;
+import namewangexperiment.com.wangweibo.MainInfor.Maintab;
+import namewangexperiment.com.wangweibo.MainInfor.WangContextRecyclerViewAdapter;
+import namewangexperiment.com.wangweibo.OnlineData.WangContext;
 import namewangexperiment.com.wangweibo.OnlineData.WangUser;
 import namewangexperiment.com.wangweibo.R;
 import namewangexperiment.com.wangweibo.Utils.L;
 import namewangexperiment.com.wangweibo.Utils.MyUpload;
 import namewangexperiment.com.wangweibo.Utils.SharePreferenceUtil;
+import namewangexperiment.com.wangweibo.Utils.T;
 import namewangexperiment.com.wangweibo.login.LoginActivity;
 import namewangexperiment.com.wangweibo.write.Writetreememory;
 
@@ -41,6 +61,11 @@ public class MainActivity extends AppCompatActivity
     private TextView tv_name;
     private TextView tv_sign;
     private MyUpload myUpload;
+    private ArrayList<WangContext> list_context=new ArrayList<>();
+    private BmobQuery<WangContext> query;
+    private int allcontextnum=0;
+    private RecyclerView recyclerView_context;
+    private WangContextRecyclerViewAdapter mcontextAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +105,7 @@ public class MainActivity extends AppCompatActivity
         image_head.setImageResource(R.mipmap.ic_alert_green);
         head_rl.setOnClickListener(this);
         image_head.setOnClickListener(this);
+        recyclerView_context= (RecyclerView) findViewById(R.id.list_context_main);
     }
 
     @Override
@@ -131,10 +157,13 @@ public class MainActivity extends AppCompatActivity
             Intent it=new Intent(MainActivity.this, WangSearch.class);
             startActivity(it);
         } else if (id == R.id.nav_minetab) {
-            Intent it=new Intent(MainActivity.this, SettingActivity.class);
+            Intent it=new Intent(MainActivity.this, Maintab.class);
+            Bundle bundle=new Bundle();
+            bundle.putSerializable("wanguesr",wangUser);
+            it.putExtras(bundle);
             startActivity(it);
         } else if (id == R.id.nav_manage) {
-            Intent it1=new Intent(MainActivity.this,PersonaldActivity.class);startActivity(it1);
+            Intent it1=new Intent(MainActivity.this,SettingActivity.class);startActivity(it1);
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
@@ -190,17 +219,113 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        if(checkuser()){
-            tv_name.setText(wangUser.getName());
-            String sign=wangUser.getSign();
-            if(sign!=null){
-                tv_sign.setText(sign);
+        if(list_context.size()==0){
+            if(checkuser()){
+                tv_name.setText(wangUser.getName());
+                String sign=wangUser.getSign();
+                if(sign!=null){
+                    tv_sign.setText(sign);
+                }
+                if(wangUser.isImgheadstutas()){
+                    myUpload.download_asynchronous_head("wangweibodata", "headimg/" + wangUser.getUsername(),image_head);
+                    L.i(TAG,"不会没更新投降吧！");
+                }
             }
-            if(wangUser.isImgheadstutas()){
-                myUpload.download_asynchronous("wangweibodata", "headimg/" + wangUser.getUsername(),image_head);
-                L.i(TAG,"不会没更新投降吧！");
+            ArrayList<String> list_context_look=wangUser.getList_attention();
+            L.i(TAG,list_context_look.size()+"我关注的用户数");
+            for(int i=0;i<list_context_look.size();i++){
+                L.i(TAG,list_context_look.size()+"");
+                seekattentions(list_context_look.get(i));
+            }
+            ArrayList<String> list_minecontext_id=wangUser.getList_mine();
+            allcontextnum+=list_minecontext_id.size();
+            for(int q=0;q<list_minecontext_id.size();q++){
+                findContext(list_minecontext_id.get(q),q);
             }
         }
 
+    }
+    private void seekattentions(String s){
+        BmobQuery<WangUser> query = new BmobQuery<WangUser>();
+        query.addWhereEqualTo("username", s);
+        query.findObjects(new FindListener<WangUser>() {
+            @Override
+            public void done(List<WangUser> object, BmobException e) {
+                if(e==null){
+                    L.i(TAG,"找到一个用户");
+                    WangUser bmobUserfind= (WangUser) object.get(0);
+                    ArrayList<String> list_contextid=bmobUserfind.getList_mine();
+                    L.i(TAG,"找到一个用户的文章数"+list_contextid.size());
+                    allcontextnum+=list_contextid.size();
+                        for(int i=0;i<list_contextid.size();i++){
+                            findContext(list_contextid.get(i),i);
+                        }
+                }else{
+                    L.i(TAG,"没有该用户"+e.toString());
+                    T.showShot(mcontext,"没找到该用户");
+                }
+            }
+        });
+    }
+    private void findContext(String str_objectId,int i){
+        query = new BmobQuery<WangContext>();
+        query.getObject(str_objectId, new QueryListener<WangContext>() {
+
+            @Override
+            public void done(WangContext object, BmobException e) {
+                if(e==null){
+                    L.i(TAG,"找到一个文章");
+                    list_context.add(object);
+                    if(list_context.size()==allcontextnum){
+                        L.i(TAG,"执行一次");
+                        if(updataContext()){
+                            msetlistAdatper();
+                        }
+                    }
+                }else{
+                    Log.i("bmob","失败："+e.getMessage()+","+e.getErrorCode());
+                }
+            }
+
+        });
+    }
+    private boolean updataContext() {
+        L.i(TAG,"排序");
+        final SimpleDateFormat sdf=new SimpleDateFormat("yy-MM-dd HH:mm:ss");
+        final Date[] data1 = {null};
+        final Date[] data2 = {null};
+        for (int i=0;i<list_context.size();i++){
+            Log.i(TAG,list_context.get(i).getCreatedAt()+"日期");
+        }
+        Comparator<WangContext> comparator = new Comparator<WangContext>(){
+            public int compare(WangContext s1, WangContext s2) {
+                //排序日期
+                try {
+                    data1[0] =sdf.parse(s1.getCreatedAt());
+                    data2[0] =sdf.parse(s2.getCreatedAt());
+                } catch (ParseException e) {
+                    Log.i(TAG,"wenti");
+                    e.printStackTrace();
+                }
+                if(data1[0].getTime()> data2[0].getTime()){
+                    return -1;
+                }else {
+                    return 1;
+                }
+            }
+        };
+        if(list_context.size()>1){
+            Collections.sort(list_context,comparator);
+        }
+        return true;
+    }
+    private void msetlistAdatper() {
+        L.i(TAG,"更新recycleview");
+        StaggeredGridLayoutManager staggeredGridLayoutManager=new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
+        recyclerView_context.setLayoutManager(staggeredGridLayoutManager);
+        mcontextAdapter=new WangContextRecyclerViewAdapter(this,list_context);
+        recyclerView_context.setAdapter(mcontextAdapter);
+//        listview_context.setAdapter(new Maincontext_Adapter(this,alist_context,alist_time,alist_level,alist_writer,alist_num,alist_numURL));
+     //   context_loading_linear.setVisibility(View.INVISIBLE);
     }
 }

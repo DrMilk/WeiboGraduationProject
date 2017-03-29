@@ -139,6 +139,29 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:layout_marginRight="40dp" />
+            <LinearLayout
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_marginLeft="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@mipmap/unusual_city"/>
+                <TextView
+                    android:id="@+id/activity_write_address"
+                    android:paddingRight="10dp"
+                    android:layout_marginLeft="6dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="italic"
+                    android:textSize="12sp"
+                    android:textColor="@color/mp_blue"
+                    android:text="定位中..."/>
+            </LinearLayout>
+
         </RelativeLayout>
 
     </LinearLayout>

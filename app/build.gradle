@@ -39,4 +39,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     //  compile files('libs/download_1.1.4.1.jar')
     compile files('libs/aliyun-oss-sdk-android-2.3.0.jar')
+    compile files('libs/AMap_Location_V3.3.0_20170118.jar')
+    compile fileTree(include: ['*.jar'], dir: 'libs')
 }

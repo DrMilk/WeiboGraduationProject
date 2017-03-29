@@ -121,10 +121,11 @@
             android:textStyle="bold|italic"
             />
         <TextView
+            android:id="@+id/list_context_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="12sp"
-            android:text="哈尔滨"/>
+            android:text="地点"/>
     </RelativeLayout>
 </LinearLayout>
 </LinearLayout>

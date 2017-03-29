@@ -119,6 +119,7 @@ public class LoginActivity extends Activity implements View.OnClickListener{
                         LoginActivity.this.finish();
                     }else {
                         T.showShot(mcontext,"登录失败！");
+                        L.i(TAG,e.toString()+"登录失败！");
                         button_ok.setEnabled(true);
                     }
                     xuloginprocess.dismiss();

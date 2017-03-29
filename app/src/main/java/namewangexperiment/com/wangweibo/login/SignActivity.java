@@ -405,6 +405,7 @@ public class SignActivity extends Activity implements View.OnClickListener{
             wanguser.setAddress(str_address);
             wanguser.setSign(str_sign);
             wanguser.setImgheadstutas(imgheadstutus);
+            wanguser.setSex(sex);
             wanguser.signUp(new SaveListener<WangUser>() {
                 @Override
                 public void done(WangUser o, BmobException e) {

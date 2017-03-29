@@ -69,6 +69,7 @@ public class WangContextRecyclerViewAdapter extends RecyclerView.Adapter<WangCon
             wuViewHolder.context_text.setText(list_context.get(position).getContext());
             wuViewHolder.time.setText(list_context.get(position).getCreatedAt().substring(0,16));
             wuViewHolder.writer.setText(list_context.get(position).getWritename());
+            wuViewHolder.bottom_address.setText(list_context.get(position).getAddress());
             switch (list_context.get(position).getFakelevel()) {
                 case 0:
                     wuViewHolder.level_img.setImageResource(R.mipmap.ic_alert_purple);
@@ -159,6 +160,7 @@ public class WangContextRecyclerViewAdapter extends RecyclerView.Adapter<WangCon
         private LinearLayout linear_img;
         private ImageView bottom_img;
         private TextView bottom_text;
+        private TextView bottom_address;
         public MyViewHolder(View itemView,int viewtype) {
             super(itemView);
             if(viewtype==NORMAL_TYPE){
@@ -171,6 +173,7 @@ public class WangContextRecyclerViewAdapter extends RecyclerView.Adapter<WangCon
                 time= (TextView) itemView.findViewById(R.id.list_context_time);
                 writer= (TextView) itemView.findViewById(R.id.list_context_writer);
                 linear_img= (LinearLayout) itemView.findViewById(R.id.list_context_linearimg);
+                bottom_address= (TextView) itemView.findViewById(R.id.list_context_address);
             }else if(viewtype==FOOT_TYPE){
                 bottom_img= (ImageView) itemView.findViewById(R.id.tab_remark_bottom_img);
                 bottom_text= (TextView) itemView.findViewById(R.id.tab_remark_bottom_text);

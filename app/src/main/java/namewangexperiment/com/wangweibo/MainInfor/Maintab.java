@@ -61,6 +61,7 @@ import namewangexperiment.com.wangweibo.OnlineData.WangRemark;
 import namewangexperiment.com.wangweibo.OnlineData.WangReward;
 import namewangexperiment.com.wangweibo.OnlineData.WangUser;
 import namewangexperiment.com.wangweibo.R;
+import namewangexperiment.com.wangweibo.Utils.L;
 import namewangexperiment.com.wangweibo.Utils.MyUpload;
 import namewangexperiment.com.wangweibo.Utils.T;
 import namewangexperiment.com.wangweibo.login.LoginActivity;
@@ -103,6 +104,7 @@ public class Maintab extends Activity{
     private MyUpload myUpload;
     private Context context;
     private String mObjectId;
+    private WangUser mineuser;
     private LinearLayout linear_remark_write;
     private int other_jundge;
     private float remark_bottom_hide = 0;
@@ -325,10 +327,7 @@ public class Maintab extends Activity{
 //                startActivity(it);
             }
         });
-        TextView tvdescription= (TextView) findViewById(R.id.maintab_descripition);
-        TextView tvmblog= (TextView) findViewById(R.id.maintab_mblog);
-        TextView tvfuns= (TextView) findViewById(R.id.maintab_funs);
-        ImageView imgsex= (ImageView) findViewById(R.id.maintab_sex);
+
 //        WangUrlGetString wuUrlGetString=new WangUrlGetString("http://weibo.com/"+"5242909969"+"/profile?topnav=1&wvr=6&is_all=1");
 //        Log.i(TAG,"http://weibo.com/"+mObjectId+"/profile?topnav=1&wvr=6&is_all=1");
 //        wuUrlGetString.setTextMblog(tvmblog);
@@ -668,6 +667,7 @@ public class Maintab extends Activity{
         if(bmobUser != null){
             // 允许用户使用应用
            // user_id=bmobUser.getObjectId();
+            mineuser=bmobUser;
             return true;
         }else{
             //缓存用户对象为空时， 可打开用户注册界面…
@@ -751,7 +751,7 @@ public class Maintab extends Activity{
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.popupwindow_collection:break;//收藏
+                case R.id.popupwindow_collection:updataUserAttention();break;//收藏
                 case R.id.popupwindow_frinend_circle:
                     T.showShot(context,"- 暂未实现此接口 -");break;//生活圈
                 case R.id.popupwindow_info:break;//基本信息
@@ -770,6 +770,43 @@ public class Maintab extends Activity{
             }
         }
     };
+
+    private void updataUserAttention() {
+        WangUser newuser=new WangUser();
+        int num_attention=mineuser.getAttentions();
+        num_attention++;
+        newuser.setAttentions(num_attention);
+        ArrayList<String> list_attention=mineuser.getList_attention();
+        list_attention.add(other.getUsername());
+        newuser.setList_attention(list_attention);
+        newuser.update(mineuser.getObjectId(), new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if (e == null) {
+                    T.showShot(context, "更改成功别人！");
+                } else {
+                    T.showShot(context, "更改失败别人！" + e.toString());
+                }
+            }
+        });
+//        WangUser newuser1=new WangUser();
+//        int fans=other.getFans();
+//        fans++;
+//        newuser1.setFans(fans);
+//        ArrayList<String> list_fans=other.getList_fans();
+//        list_fans.add(mineuser.getObjectId());
+//        newuser1.setList_fans(list_fans);
+//        newuser1.update(other.getObjectId(), new UpdateListener() {
+//            @Override
+//            public void done(BmobException e) {
+//                if (e == null) {
+//                    T.showShot(context, "更改成功啊！");
+//                } else {
+//                    T.showShot(context, "更改失败啊！" + e.toString());
+//                }
+//            }
+//        });
+    }
     private void openpopupwindow() {
         //外部变暗
         if(width==-1&&height==-1){
@@ -807,5 +844,33 @@ public class Maintab extends Activity{
         collapsing_width=maintab_bg.getWidth();
         collapsing_Y=maintab_bg.getY();
         super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        TextView tvdescription= (TextView) findViewById(R.id.maintab_descripition);
+        TextView tvmblog= (TextView) findViewById(R.id.maintab_mblog);
+        TextView tvfuns= (TextView) findViewById(R.id.maintab_funs);
+        TextView tvname= (TextView) findViewById(R.id.maintab_name);
+        ImageView imghead= (ImageView) findViewById(R.id.maintab_imghead);
+        ImageView imgsex= (ImageView) findViewById(R.id.maintab_sex);
+        String str_name=other.getName();
+        String str_description=other.getSign();
+        String str_funs=String.valueOf(other.getFans());
+        String str_mblog=String.valueOf(other.getAttentions());
+        str_funs=str_funs==null?"0":str_funs;
+        str_mblog=str_mblog==null?"0":str_mblog;
+        str_description=str_description==null?" ":str_description;
+        tvname.setText(str_name);
+        tvfuns.setText(str_funs);
+        tvmblog.setText(str_mblog);
+        tvdescription.setText(str_description);
+        if(other.getSex().equals("女")){
+            imgsex.setImageResource(R.mipmap.userinfo_icon_female);
+        }
+        if(other.isImgheadstutas())
+        myUpload.download_asynchronous_head("wangweibodata", "headimg/" + other.getUsername(),imghead);
+        checkuser();
     }
 }

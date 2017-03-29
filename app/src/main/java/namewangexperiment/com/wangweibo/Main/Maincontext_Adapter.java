@@ -1,4 +1,4 @@
-package namewangexperiment.com.wangweibo.MainInfor;
+package namewangexperiment.com.wangweibo.Main;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -83,8 +83,7 @@ public class Maincontext_Adapter extends BaseAdapter{
             case 2:wuViewHolder.level_img.setImageResource(R.mipmap.ic_alert_yellow);wuViewHolder.level.setText("一般");wuViewHolder.level.setTextColor(mcontext.getResources().getColor(R.color.yello_level));wuViewHolder.context_text.setTextColor(mcontext.getResources().getColor(R.color.yello_level));break;
             case 3:wuViewHolder.level_img.setImageResource(R.mipmap.ic_alert_bule);wuViewHolder.level.setText("难过");wuViewHolder.level.setTextColor(mcontext.getResources().getColor(R.color.blue_level));wuViewHolder.context_text.setTextColor(mcontext.getResources().getColor(R.color.blue_level));break;
             case 4:wuViewHolder.level_img.setImageResource(R.mipmap.ic_alert_green);wuViewHolder.level.setText("伤悲");wuViewHolder.level.setTextColor(mcontext.getResources().getColor(R.color.green_level));wuViewHolder.context_text.setTextColor(mcontext.getResources().getColor(R.color.green_level));break;
-        }
-        switch (list_num.get(position)){
+        }        switch (list_num.get(position)){
             case 0:wuViewHolder.linear_img.setVisibility(View.GONE);break;
             case 1:myUpload.download_asynchronous("keymanword","context/"+list_numURL.get(position)+"/"+"img1",wuViewHolder.img1);wuViewHolder.img2.setVisibility(View.INVISIBLE);wuViewHolder.img3.setVisibility(View.INVISIBLE);break;
             case 2:myUpload.download_asynchronous("keymanword","context/"+list_numURL.get(position)+"/"+"img1",wuViewHolder.img1);myUpload.download_asynchronous("keymanword","context/"+list_numURL.get(position)+"/"+"img2",wuViewHolder.img2);wuViewHolder.img3.setVisibility(View.INVISIBLE);break;

@@ -195,6 +195,74 @@ public class MyUpload {
         return outStream.toByteArray();
 // task.waitUntilFinished(); // 如果需要等待任务完成
     }
+    //异步头像
+    public byte[] download_asynchronous_head(String bucketName, final String objectKey, final ImageView img){
+        final String cache_str=objectKey.split("/")[1];
+        Log.i(TAG,"查谁啊~"+cache_str);
+        Bitmap bitmap=wuSdcard.getPicture(MySdcard.pathCacheImage,cache_str);
+        if(bitmap!=null){
+            img.setImageBitmap(BitmapUtil.toRoundBitmap(bitmap));
+            return null;
+        }
+        Log.i(TAG,"到了吗");
+//        if(lruCacheUtil.getBitmapFromMemCache(objectKey)!=null){
+//            img.setImageBitmap(lruCacheUtil.getBitmapFromMemCache(objectKey));
+//            L.i(TAG,"ok le");
+//            return null;
+//        }
+        //  lruCacheUtil.getBitmapFromMemCache(objectKey);
+        final ByteArrayOutputStream outStream=new ByteArrayOutputStream();
+        GetObjectRequest get = new GetObjectRequest(bucketName,objectKey);
+        OSSAsyncTask task = oss.asyncGetObject(get, new OSSCompletedCallback<GetObjectRequest, GetObjectResult>() {
+            @Override
+            public void onSuccess(GetObjectRequest request, GetObjectResult result) {
+                // 请求成功
+                InputStream inputStream = result.getObjectContent();
+                //  lruCacheUtil.addBitmapToMemoryCache(objectKey,BitmapFactory.decodeStream(inputStream));
+                wuSdcard.savePicture(MySdcard.pathCacheImage,cache_str,BitmapFactory.decodeStream(inputStream));
+                Bitmap bitmap=wuSdcard.getPicture(MySdcard.pathCacheImage,cache_str);
+                if(bitmap!=null){
+                    img.setImageBitmap(BitmapUtil.toRoundBitmap(bitmap));
+                }
+                byte[] buffer = new byte[2048];
+                int len;
+                try {
+                    while ((len = inputStream.read(buffer)) != -1) {
+                        // 处理下载的数据
+                        Log.i("MyUpload","下载成功了");
+                        outStream.write(buffer, 0, len);
+                        Log.i("MyUpload",outStream.toByteArray().length+"weishaa");
+                    }
+                    Log.i("MyUpload","下载成功了");
+                    test(outStream.toByteArray());
+                    outStream.close();
+                    inputStream.close();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(GetObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
+                // 请求异常
+                if (clientExcepion != null) {
+                    // 本地异常如网络异常等
+                    clientExcepion.printStackTrace();
+                }
+                if (serviceException != null) {
+                    // 服务异常
+                    Log.e("ErrorCode", serviceException.getErrorCode());
+                    Log.e("RequestId", serviceException.getRequestId());
+                    Log.e("HostId", serviceException.getHostId());
+                    Log.e("RawMessage", serviceException.getRawMessage());
+                }
+            }
+        });
+// task.cancel(); // 可以取消任务
+        Log.i("MyUpload",outStream.toByteArray().length+"youyisile");
+        return outStream.toByteArray();
+// task.waitUntilFinished(); // 如果需要等待任务完成
+    }
     //异步
     public byte[] download_saveEverthing(String bucketName, final String objectKey, final String kind,final String save_url){
         final ByteArrayOutputStream outStream=new ByteArrayOutputStream();
