@@ -324,6 +324,17 @@ public class MainActivity extends AppCompatActivity
         StaggeredGridLayoutManager staggeredGridLayoutManager=new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
         recyclerView_context.setLayoutManager(staggeredGridLayoutManager);
         mcontextAdapter=new WangContextRecyclerViewAdapter(this,list_context);
+        mcontextAdapter.setItemContextOnclickListenner(new WangContextRecyclerViewAdapter.ItemContextnclickListenner() {
+            @Override
+            public void onitemclickcontext(WangContextRecyclerViewAdapter.MyViewHolder viewHolder, int postion) {
+                Intent it=new Intent(MainActivity.this,DetailContextActivity.class);
+                Bundle bundle=new Bundle();
+                bundle.putSerializable("detailcontext",list_context.get(postion));
+                it.putExtras(bundle);
+                L.i(TAG,"到这步了~");
+                startActivity(it);
+            }
+        });
         recyclerView_context.setAdapter(mcontextAdapter);
 //        listview_context.setAdapter(new Maincontext_Adapter(this,alist_context,alist_time,alist_level,alist_writer,alist_num,alist_numURL));
      //   context_loading_linear.setVisibility(View.INVISIBLE);

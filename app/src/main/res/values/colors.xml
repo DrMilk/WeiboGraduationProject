@@ -21,6 +21,7 @@
     <color name="darkslategray">#2F4F4F</color>
     <color name="teal">#008080</color>
     <color name="white_smoke">#F5F5F5</color>
+    <color name="white_bg">#d3dae6</color>
     <color name="title_text">#417fca</color>
     <color name="context_text">#55438b</color>
     <color name="pink_red_toobar">#df364d</color>

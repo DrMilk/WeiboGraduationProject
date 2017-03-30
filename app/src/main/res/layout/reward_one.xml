@@ -21,19 +21,19 @@
         android:textColor="@color/white_smoke"
         android:textSize="12sp"/>
     <TextView
-        android:id="@+id/reward_one_ok"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="￥"
-        android:layout_marginLeft="6dp"
-        android:textStyle="italic"
-        android:textColor="@color/white_smoke"
-        android:textSize="10sp"/>
-    <TextView
         android:textStyle="italic"
         android:id="@+id/reward_one_money"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/white_smoke"
+        android:textSize="10sp"/>
+    <TextView
+        android:id="@+id/reward_one_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="%"
+        android:layout_marginLeft="6dp"
+        android:textStyle="italic"
         android:textColor="@color/white_smoke"
         android:textSize="10sp"/>
 </LinearLayout>

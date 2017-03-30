@@ -97,18 +97,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp">
-                    <TextView
-                        android:id="@+id/relation_shu"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:text="|"
-                        android:textSize="12sp"
-                        android:textColor="@color/white" />
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_toLeftOf="@id/relation_shu">
+                        android:layout_centerInParent="true">
                         <TextView
                             android:layout_marginRight="4dp"
                             android:layout_width="wrap_content"
@@ -123,28 +115,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="100"
-                            android:textSize="12sp"
-                            android:textColor="@color/white_smoke"
-                            android:theme="@style/textshadowColor"/>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_toRightOf="@id/relation_shu">
-                        <TextView
-                            android:layout_marginLeft="10dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="粉丝"
-                            android:textSize="12sp"
-                            android:textColor="@color/white_smoke"
-                            android:theme="@style/textshadowColor"/>
-                        <TextView
-                            android:id="@+id/maintab_funs"
-                            android:layout_marginLeft="4dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="1672"
                             android:textSize="12sp"
                             android:textColor="@color/white_smoke"
                             android:theme="@style/textshadowColor"/>
@@ -184,7 +154,13 @@
                 />
         </LinearLayout>
     </android.support.design.widget.AppBarLayout>
-
+    <android.support.v4.view.ViewPager
+        android:id="@+id/maintab_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/bg_for_alert_pressed"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:alpha="0.7"/>
     <LinearLayout
         android:id="@+id/activity_maintab_linear_remark"
         android:background="@color/gold_yellow"
@@ -195,25 +171,23 @@
         android:gravity="right">
         <EditText
             android:id="@+id/tab_remark_write"
-            android:layout_marginLeft="54dp"
+            android:layout_marginLeft="74dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:maxLines="1"
+            android:hint="添加评论"
+            android:textSize="12sp"
+            android:textColor="@color/blue_black"
+            android:textColorHint="@color/blue_black"
             android:theme="@style/style_about"/>
         <ImageView
+            android:layout_marginRight="14dp"
+            android:layout_marginLeft="20dp"
             android:id="@+id/tab_remark_send"
-            android:layout_gravity="right"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_gravity="right|center_vertical"
+            android:layout_width="30dp"
+            android:layout_height="40dp"
             android:src="@mipmap/upload_icon"
             />
     </LinearLayout>
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/maintab_viewpager"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@mipmap/bg_for_alert_pressed"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:alpha="0.7"/>
 </android.support.design.widget.CoordinatorLayout>

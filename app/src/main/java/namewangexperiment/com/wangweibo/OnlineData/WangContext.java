@@ -1,14 +1,16 @@
 package namewangexperiment.com.wangweibo.OnlineData;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import cn.bmob.v3.BmobObject;
+import namewangexperiment.com.wangweibo.Utils.L;
 
 /**
  * Created by Administrator on 2017/1/12.
  */
 
-public class WangContext extends BmobObject {
+public class WangContext extends BmobObject implements Serializable{
     private int num;
     private String context;
     private String writename;
@@ -66,6 +68,10 @@ public class WangContext extends BmobObject {
     }
 
     public ArrayList<String> getList_remark() {
+        if(list_remark==null){
+            list_remark=new ArrayList<>();
+            L.i("wu","我就看看走没走这步");
+        }
         return list_remark;
     }
 

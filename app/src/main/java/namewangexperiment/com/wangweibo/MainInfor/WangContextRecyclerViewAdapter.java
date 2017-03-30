@@ -29,6 +29,7 @@ public class WangContextRecyclerViewAdapter extends RecyclerView.Adapter<WangCon
     private ArrayList<WangContext> list_context;
     private int should_max=0;
     private Context mcontext;
+    private ItemContextnclickListenner itemContextOnclickListenner=null;
 //    public WuContextRecyclerViewAdapter(Context mcontext, ArrayList<String> list_context, ArrayList<String> list_time, ArrayList<Integer> list_level, ArrayList<String> list_writer, ArrayList<Integer> list_num, ArrayList<String> list_numURL){
 //        mlayoutInflater=LayoutInflater.from(mcontext);
 //        this.mcontext=mcontext;
@@ -48,6 +49,9 @@ public class WangContextRecyclerViewAdapter extends RecyclerView.Adapter<WangCon
         myUpload=new MyUpload(mcontext);
         should_max=list_context.size();
     }
+    public interface ItemContextnclickListenner{
+        public void onitemclickcontext(MyViewHolder viewHolder,int postion);
+    }
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if(viewType==NORMAL_TYPE){
@@ -60,7 +64,7 @@ public class WangContextRecyclerViewAdapter extends RecyclerView.Adapter<WangCon
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder wuViewHolder, int position) {
+    public void onBindViewHolder(final MyViewHolder wuViewHolder, final int position) {
         wuViewHolder.linear_img.setVisibility(View.VISIBLE);
         wuViewHolder.img1.setVisibility(View.VISIBLE);
         wuViewHolder.img2.setVisibility(View.VISIBLE);
@@ -135,8 +139,25 @@ public class WangContextRecyclerViewAdapter extends RecyclerView.Adapter<WangCon
                     myUpload.download_asynchronous("wangweibodata", "context/" + list_context.get(position).getObjectId() + "/" + "img3", wuViewHolder.img3);
                     break;
             }
+        if(itemContextOnclickListenner!=null){
+            wuViewHolder.context_text.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    itemContextOnclickListenner.onitemclickcontext(wuViewHolder,position);
+                }
+            });
+        }
 //        }
     }
+
+    public ItemContextnclickListenner getItemContextOnclickListenner() {
+        return itemContextOnclickListenner;
+    }
+
+    public void setItemContextOnclickListenner(ItemContextnclickListenner itemContextOnclickListenner) {
+        this.itemContextOnclickListenner = itemContextOnclickListenner;
+    }
+
     @Override
     public int getItemCount() {
         return should_max;
@@ -148,7 +169,7 @@ public class WangContextRecyclerViewAdapter extends RecyclerView.Adapter<WangCon
 //        }
         return NORMAL_TYPE;
     }
-    class MyViewHolder extends RecyclerView.ViewHolder{
+    public class MyViewHolder extends RecyclerView.ViewHolder{
         private TextView time;
         private TextView level;
         private ImageView level_img;

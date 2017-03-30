@@ -55,6 +55,8 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
+import namewangexperiment.com.wangweibo.Main.DetailContextActivity;
+import namewangexperiment.com.wangweibo.Main.MainActivity;
 import namewangexperiment.com.wangweibo.Main.WangBannerPageTransformer;
 import namewangexperiment.com.wangweibo.OnlineData.WangContext;
 import namewangexperiment.com.wangweibo.OnlineData.WangRemark;
@@ -121,6 +123,7 @@ public class Maintab extends Activity{
     private PopupWindowMainTab mPopupWindows;
     private int width=-1;
     private int height=-1;
+    private WangTagCloudLayout wuTagCloudLayout;
     private WangContextRecyclerViewAdapter mcontextAdapter;
     private Handler handler = new Handler()
     {
@@ -160,7 +163,6 @@ public class Maintab extends Activity{
 //        };
         TextView reward_num_textview= (TextView) view_data.findViewById(R.id.reward_num);
         reward_num_textview.setText(list_reward_str.size()+"");
-        WangTagCloudLayout wuTagCloudLayout= (WangTagCloudLayout) view_data.findViewById(R.id.tab_data_WuTagCloudLayout);
        // MarginLayoutParams lp = new MarginLayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.MATCH_PARENT);
 //        lp.leftMargin = 5;
 //        lp.rightMargin = 5;
@@ -290,6 +292,7 @@ public class Maintab extends Activity{
         text_liaosao= (TextView) view_data.findViewById(R.id.tab_data_liaosao);
         text_feibang= (TextView) view_data.findViewById(R.id.tab_data_feibang);
         text_shangbei= (TextView) view_data.findViewById(R.id.tab_data_shangbei);
+        wuTagCloudLayout= (WangTagCloudLayout) view_data.findViewById(R.id.tab_data_WuTagCloudLayout);
         wucircle= (WangCircularStatistics) view_data.findViewById(R.id.tab_data_circle);
         ctl= (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         maintab_bg= (ImageView) findViewById(R.id.maintab_bg);
@@ -364,6 +367,7 @@ public class Maintab extends Activity{
         LinearLayout linear_tab= (LinearLayout) view_context.findViewById(R.id.activity_linear_tab);
         //评论初始化
         initremark();
+        initsign();
         //添加view集合
         list_view.add(view_context);
         list_view.add(view_data);
@@ -402,6 +406,10 @@ public class Maintab extends Activity{
         mTabLayout.setTabsFromPagerAdapter(mAdapter);
     }
 
+    private void initsign() {
+        findreward();
+    }
+
     @TargetApi(Build.VERSION_CODES.M)
     private void initremark() {
         myUpload=new MyUpload(this);
@@ -422,7 +430,7 @@ public class Maintab extends Activity{
                                 Log.i(TAG,"成功了！！！！！！"+tab_remark_edit.getText().toString()+user_id);
                                 Snackbar.make(view_remark,"评论成功！", Snackbar.LENGTH_SHORT).show();
                                 other_jundge=1;
-                             //   otherupdata(mObjectId,s.toString());
+ //                               otherupdata(mObjectId,s.toString());
                             }else{
                                 Log.i(TAG,"出错了？？？？？？");
                                 other_jundge=2;
@@ -480,7 +488,6 @@ public class Maintab extends Activity{
 //            });
 //        }
             //initData();
-            findreward();
             wuRemarkRecycleAdapter.setOnRecyclerGreatClickListener(new WangRemarkRecycleAdapter.OnRecyclerGreatClickListener() {
                 @Override
                 public void onGreatClick(WangRemarkRecycleAdapter.MyViewHolder view, int postion) {
@@ -531,6 +538,17 @@ public class Maintab extends Activity{
         StaggeredGridLayoutManager staggeredGridLayoutManager=new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
         recyclerView_context.setLayoutManager(staggeredGridLayoutManager);
         mcontextAdapter=new WangContextRecyclerViewAdapter(this,list_context);
+        mcontextAdapter.setItemContextOnclickListenner(new WangContextRecyclerViewAdapter.ItemContextnclickListenner() {
+            @Override
+            public void onitemclickcontext(WangContextRecyclerViewAdapter.MyViewHolder viewHolder, int postion) {
+                Intent it=new Intent(Maintab.this,DetailContextActivity.class);
+                Bundle bundle=new Bundle();
+                bundle.putSerializable("detailcontext",list_context.get(postion));
+                it.putExtras(bundle);
+                L.i(TAG,"到这步了~");
+                startActivity(it);
+            }
+        });
         recyclerView_context.setAdapter(mcontextAdapter);
 //        listview_context.setAdapter(new Maincontext_Adapter(this,alist_context,alist_time,alist_level,alist_writer,alist_num,alist_numURL));
         context_loading_linear.setVisibility(View.INVISIBLE);
@@ -626,6 +644,18 @@ public class Maintab extends Activity{
         });
     }
     private void findreward(){
+        View linear=LayoutInflater.from(context).inflate(R.layout.reward_one,null);
+        LayoutParams lp=new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+        MarginLayoutParams marginLayoutParams= new MarginLayoutParams(lp.width,lp.height);
+        marginLayoutParams.setMargins(10,10,10,10);
+        LinearLayout linear_bg= (LinearLayout) linear.findViewById(R.id.reward_one_linear);
+        linear_bg.setBackgroundResource(R.drawable.tab_reward_bgcircle_on);
+        TextView text_keyword= (TextView) linear.findViewById(R.id.reward_one_keyword);
+        text_keyword.setText("添加");
+        TextView text_get_ok= (TextView) linear.findViewById(R.id.reward_one_ok);
+        text_get_ok.setText("+");
+        wuTagCloudLayout.addView(linear,marginLayoutParams);
+        wuTagCloudLayout.invalidate();
         list_reward_str=new ArrayList<>();
         Log.i(TAG," zhixingdaozhebule");
         if(other.getList_reward()!=null){
@@ -851,7 +881,7 @@ public class Maintab extends Activity{
         super.onResume();
         TextView tvdescription= (TextView) findViewById(R.id.maintab_descripition);
         TextView tvmblog= (TextView) findViewById(R.id.maintab_mblog);
-        TextView tvfuns= (TextView) findViewById(R.id.maintab_funs);
+//        TextView tvfuns= (TextView) findViewById(R.id.maintab_funs);
         TextView tvname= (TextView) findViewById(R.id.maintab_name);
         ImageView imghead= (ImageView) findViewById(R.id.maintab_imghead);
         ImageView imgsex= (ImageView) findViewById(R.id.maintab_sex);
@@ -863,7 +893,7 @@ public class Maintab extends Activity{
         str_mblog=str_mblog==null?"0":str_mblog;
         str_description=str_description==null?" ":str_description;
         tvname.setText(str_name);
-        tvfuns.setText(str_funs);
+//        tvfuns.setText(str_funs);
         tvmblog.setText(str_mblog);
         tvdescription.setText(str_description);
         if(other.getSex().equals("女")){
