@@ -3,8 +3,10 @@ package namewangexperiment.com.wangweibo.MainInfor;
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
@@ -24,6 +26,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.view.Window;
@@ -52,15 +55,18 @@ import java.util.List;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
+import namewangexperiment.com.wangweibo.KeySearch.WangSearch;
 import namewangexperiment.com.wangweibo.Main.DetailContextActivity;
 import namewangexperiment.com.wangweibo.Main.MainActivity;
 import namewangexperiment.com.wangweibo.Main.WangBannerPageTransformer;
 import namewangexperiment.com.wangweibo.OnlineData.WangContext;
 import namewangexperiment.com.wangweibo.OnlineData.WangRemark;
 import namewangexperiment.com.wangweibo.OnlineData.WangReward;
+import namewangexperiment.com.wangweibo.OnlineData.WangSign;
 import namewangexperiment.com.wangweibo.OnlineData.WangUser;
 import namewangexperiment.com.wangweibo.R;
 import namewangexperiment.com.wangweibo.Utils.L;
@@ -84,7 +90,7 @@ public class Maintab extends Activity{
     private List<String> list_title=new ArrayList<String>();
     private WangUser other=new WangUser();
     private ArrayList<WangContext> list_context=new ArrayList<WangContext>();
-    private ArrayList<WangReward> list_reward=new ArrayList<WangReward>();
+    private ArrayList<WangSign> list_reward=new ArrayList<WangSign>();
     private ArrayList<String> list_reward_str;
     private BmobQuery<WangContext> query;
     private int lock_num=-1;
@@ -123,6 +129,7 @@ public class Maintab extends Activity{
     private PopupWindowMainTab mPopupWindows;
     private int width=-1;
     private int height=-1;
+    private ArrayList<String> list_remark;
     private WangTagCloudLayout wuTagCloudLayout;
     private WangContextRecyclerViewAdapter mcontextAdapter;
     private Handler handler = new Handler()
@@ -194,20 +201,54 @@ public class Maintab extends Activity{
 //            linearLayout.addView(view1);
             View linear=LayoutInflater.from(context).inflate(R.layout.reward_one,null);
             LinearLayout linear_bg= (LinearLayout) linear.findViewById(R.id.reward_one_linear);
-            if(list_reward.get(i).isResponse_status()){
-                linear_bg.setBackgroundResource(R.drawable.tab_reward_bgcircle_on);
+//            if(list_reward.get(i).isResponse_status()){
+            if(Integer.valueOf(list_reward.get(i).getPrecent())<50)
+                linear_bg.setBackgroundResource(R.drawable.tab_reward_bgcircle);
                 TextView text_keyword= (TextView) linear.findViewById(R.id.reward_one_keyword);
-                text_keyword.setText(list_reward.get(i).getKeyword());
+                text_keyword.setText(list_reward.get(i).getValue());
                 TextView text_get_ok= (TextView) linear.findViewById(R.id.reward_one_ok);
-                text_get_ok.setText("√");
-                wuTagCloudLayout.addView(linear,marginLayoutParams);
-            }else {
-                TextView text_keyword= (TextView) linear.findViewById(R.id.reward_one_keyword);
-                text_keyword.setText(list_reward.get(i).getKeyword());
                 TextView text_money= (TextView) linear.findViewById(R.id.reward_one_money);
-                text_money.setText(list_reward.get(i).getRmoney()+"");
-                wuTagCloudLayout.addView(linear,marginLayoutParams);
+                text_money.setText(list_reward.get(i).getPrecent()+"");
+                //text_get_ok.setText("√");
+            if(other.getUsername().equals(mineuser.getUsername())){
+                text_keyword.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        TextView vt=(TextView)v;
+                        for(int i=0;i<list_reward.size();i++){
+                            if(list_reward.get(i).getValue().equals(vt.getText())){
+                                for(int q=0;q<list_reward_str.size();q++){
+                                    if(list_reward_str.equals(list_reward.get(i).getObjectId())){
+                                        list_reward_str.remove(i);
+                                    }
+                                }
+                            }
+                        }
+                        mineuser.setList_reward(list_reward_str);
+                        mineuser.update(other.getObjectId(), new UpdateListener() {
+                            @Override
+                            public void done(BmobException e) {
+                                if(e==null){
+                                    T.showShot(context,"更新成功！");
+                                }else {
+                                    T.showShot(context,"更新失败！");
+                                }
+                            }
+                        });
+                        return false;
+                    }
+                });
             }
+            wuTagCloudLayout.addView(linear,marginLayoutParams);
+            L.i(TAG,"更新~~");
+            wuTagCloudLayout.invalidate();
+//            }else {
+//                TextView text_keyword= (TextView) linear.findViewById(R.id.reward_one_keyword);
+//                text_keyword.setText(list_reward.get(i).getKeyword());
+//                TextView text_money= (TextView) linear.findViewById(R.id.reward_one_money);
+//                text_money.setText(list_reward.get(i).getRmoney()+"");
+//                wuTagCloudLayout.addView(linear,marginLayoutParams);
+//            }
         }
         wuTagCloudLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -222,7 +263,7 @@ public class Maintab extends Activity{
         });
 //        View linear_add=LayoutInflater.from(context).inflate(R.layout.tab_reward_add,null);
 //        wuTagCloudLayout.addView(linear_add,marginLayoutParams);
-       // wuTagCloudLayout.invalidate();
+
 
     }
 
@@ -306,8 +347,7 @@ public class Maintab extends Activity{
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()){
-                    case MotionEvent.ACTION_DOWN:imgback.setImageResource(R.mipmap.userinfo_buttonicon_back_highlighted);break;
-                    case MotionEvent.ACTION_UP:imgback.setImageResource(R.mipmap.userinfo_buttonicon_back);Maintab.this.finish();break;
+                    case MotionEvent.ACTION_DOWN:imgback.setImageResource(R.mipmap.userinfo_buttonicon_back_highlighted);Maintab.this.finish();break;
                 }
                 return false;
             }
@@ -367,6 +407,7 @@ public class Maintab extends Activity{
         LinearLayout linear_tab= (LinearLayout) view_context.findViewById(R.id.activity_linear_tab);
         //评论初始化
         initremark();
+        checkuser();
         initsign();
         //添加view集合
         list_view.add(view_context);
@@ -422,19 +463,16 @@ public class Maintab extends Activity{
             @Override
             public void onClick(View v) {
                 if(checkuser()){
-                    WangRemark wuRemark=new WangRemark(tab_remark_edit.getText().toString(),user_id,0,0);
+                    WangRemark wuRemark=new WangRemark(tab_remark_edit.getText().toString(),user_id,0,0,other.getUsername());
                     wuRemark.save(new SaveListener<String>() {
                         @Override
                         public void done(String s, BmobException e) {
                             if(e==null){
                                 Log.i(TAG,"成功了！！！！！！"+tab_remark_edit.getText().toString()+user_id);
                                 Snackbar.make(view_remark,"评论成功！", Snackbar.LENGTH_SHORT).show();
-                                other_jundge=1;
- //                               otherupdata(mObjectId,s.toString());
                             }else{
-                                Log.i(TAG,"出错了？？？？？？");
-                                other_jundge=2;
-//                                otherupdata(other.getId(),context_id_str[0]);
+                                Snackbar.make(view_remark,"上传失败！", Snackbar.LENGTH_SHORT).show();
+
                             }
                         }
                     });
@@ -466,10 +504,9 @@ public class Maintab extends Activity{
                 }
             }
         });
-        ArrayList<String> list_remark=new ArrayList<>();
-        list_remark=other.getList_remark();
+        list_remark= new ArrayList<String>();
         if(list_remark!=null&&list_remark.size()!=0) {
-            wuRemarkRecycleAdapter = new WangRemarkRecycleAdapter(this, list_remark);
+            wuRemarkRecycleAdapter = new WangRemarkRecycleAdapter(this,list_remark);
             recyclerView_remark.setItemAnimator(new DefaultItemAnimator());
             recyclerView_remark.setAdapter(wuRemarkRecycleAdapter);
 //            wuRemarkRecycleAdapter.setOnRecyclerItemClickListener(new WuRemarkRecycleAdapter.OnRecyclerItemClickListener() {
@@ -644,18 +681,6 @@ public class Maintab extends Activity{
         });
     }
     private void findreward(){
-        View linear=LayoutInflater.from(context).inflate(R.layout.reward_one,null);
-        LayoutParams lp=new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
-        MarginLayoutParams marginLayoutParams= new MarginLayoutParams(lp.width,lp.height);
-        marginLayoutParams.setMargins(10,10,10,10);
-        LinearLayout linear_bg= (LinearLayout) linear.findViewById(R.id.reward_one_linear);
-        linear_bg.setBackgroundResource(R.drawable.tab_reward_bgcircle_on);
-        TextView text_keyword= (TextView) linear.findViewById(R.id.reward_one_keyword);
-        text_keyword.setText("添加");
-        TextView text_get_ok= (TextView) linear.findViewById(R.id.reward_one_ok);
-        text_get_ok.setText("+");
-        wuTagCloudLayout.addView(linear,marginLayoutParams);
-        wuTagCloudLayout.invalidate();
         list_reward_str=new ArrayList<>();
         Log.i(TAG," zhixingdaozhebule");
         if(other.getList_reward()!=null){
@@ -665,17 +690,17 @@ public class Maintab extends Activity{
             Log.i(TAG," chucisnxvuioerge");
         }
         final String[] a = new String[1];
-        BmobQuery<WangReward> query_reward;
+        BmobQuery<WangSign> query_reward;
         for(int i=0;i<list_reward_str.size();i++){
-            query_reward = new BmobQuery<WangReward>();
+            query_reward = new BmobQuery<WangSign>();
             Log.i(TAG,list_reward_str.get(i)+" list_reward_str.get(i)");
-            query_reward.getObject(list_reward_str.get(i), new QueryListener<WangReward>() {
+            query_reward.getObject(list_reward_str.get(i), new QueryListener<WangSign>() {
                 @Override
-                public void done(WangReward object, BmobException e) {
+                public void done(WangSign object, BmobException e) {
                     if(e==null){
                         list_reward.add(object);
                         Log.i(TAG,list_reward.size()+"ef");
-                        if(list_reward.size()== list_reward_str.size()){
+                        if(list_reward.size()==list_reward_str.size()){
                             updataReward();
                             Log.i(TAG,list_reward.size()+"ef"+list_reward_str.size());
                         }
@@ -686,6 +711,78 @@ public class Maintab extends Activity{
 
             });
         }
+        if(other==null){
+            L.i(TAG,"other");
+        }
+        if(mineuser==null){
+            L.i(TAG,"mineuser");
+        }
+        if(other.getUsername().equals(mineuser.getUsername())){
+            View linear=LayoutInflater.from(context).inflate(R.layout.reward_one,null);
+            LayoutParams lp=new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+            MarginLayoutParams marginLayoutParams= new MarginLayoutParams(lp.width,lp.height);
+            marginLayoutParams.setMargins(10,10,10,10);
+            LinearLayout linear_bg= (LinearLayout) linear.findViewById(R.id.reward_one_linear);
+            linear_bg.setBackgroundResource(R.drawable.tab_reward_bgcircle_on);
+            TextView text_keyword= (TextView) linear.findViewById(R.id.reward_one_keyword);
+            text_keyword.setText("添加");
+            text_keyword.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    View view=mInflater.inflate(R.layout.signdialog,null);
+                    // final EditText inputServer = new EditText(context);
+                    final EditText editTextvalue= (EditText) view.findViewById(R.id.sign_add_value);
+                    final EditText editTextpercent= (EditText) view.findViewById(R.id.sign_add_percent);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle("标签").setIcon(R.mipmap.syncing_2).setView(view)
+                            .setNegativeButton("取消", null);
+                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            View linear=LayoutInflater.from(context).inflate(R.layout.reward_one,null);
+                            LayoutParams lp=new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+                            MarginLayoutParams marginLayoutParams= new MarginLayoutParams(lp.width,lp.height);
+                            marginLayoutParams.setMargins(10,10,10,10);
+                            LinearLayout linear_bg= (LinearLayout) linear.findViewById(R.id.reward_one_linear);
+                            linear_bg.setBackgroundResource(R.drawable.tab_reward_bgcircle_on);
+                            TextView text_keyword= (TextView) linear.findViewById(R.id.reward_one_keyword);
+                            text_keyword.setText(editTextvalue.getText().toString());
+                            TextView text_money= (TextView) linear.findViewById(R.id.reward_one_money);
+                            text_money.setText(editTextpercent.getText().toString());
+                            wuTagCloudLayout.addView(linear,marginLayoutParams);
+                            wuTagCloudLayout.invalidate();
+                            final WangSign wangSign=new WangSign(editTextvalue.getText().toString(),editTextpercent.getText().toString());
+                            wangSign.save(new SaveListener<String>() {
+                                @Override
+                                public void done(String s, BmobException e) {
+                                    if(e==null){
+                                        list_reward_str.add(s);
+                                        mineuser.setList_reward(list_reward_str);
+                                        mineuser.update(other.getObjectId(), new UpdateListener() {
+                                            @Override
+                                            public void done(BmobException e) {
+                                                if(e==null){
+                                                    T.showShot(context,"更新成功！");
+                                                }else {
+                                                    T.showShot(context,"更新失败！");
+                                                }
+                                            }
+                                        });
+                                    }else {
+
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    builder.show();
+                }
+            });
+            TextView text_get_ok= (TextView) linear.findViewById(R.id.reward_one_ok);
+            text_get_ok.setText("+");
+            wuTagCloudLayout.addView(linear,marginLayoutParams);
+            wuTagCloudLayout.invalidate();
+        }
+
     }
 
     private void updataReward() {
@@ -902,5 +999,22 @@ public class Maintab extends Activity{
         if(other.isImgheadstutas())
         myUpload.download_asynchronous_head("wangweibodata", "headimg/" + other.getUsername(),imghead);
         checkuser();
+        BmobQuery<WangRemark> query = new BmobQuery<WangRemark>();
+        query.addWhereEqualTo("facename", other.getUsername());
+        query.setLimit(10);
+        query.findObjects(new FindListener<WangRemark>() {
+            @Override
+            public void done(List<WangRemark> object,BmobException e) {
+                if(e==null){
+                    L.i(TAG,"有评论"+e.toString());
+                    for(int i=0;i<object.size();i++){
+                        list_remark.add(object.get(i).getObjectId());
+                    }
+                    wuRemarkRecycleAdapter.notifyDataSetChanged();
+                }else{
+                    L.i(TAG,"没有评论"+e.toString());
+                }
+            }
+        });
     }
 }

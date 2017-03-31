@@ -189,7 +189,7 @@ public class DetailContextActivity extends Activity{
             public void onClick(View v) {
                 if(checkuser()){
                     String s=remark_edit.getText().toString().trim();
-                    WangRemark remarkdataone=new WangRemark(s,name,0,0);
+                    WangRemark remarkdataone=new WangRemark(s,name,0,0,"A");
                     listremark.add(remarkdataone);
                     madapter.notifyDataSetChanged();
                     remarkdataone.save(new SaveListener<String>() {

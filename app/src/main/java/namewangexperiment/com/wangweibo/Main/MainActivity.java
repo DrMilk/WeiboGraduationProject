@@ -102,7 +102,6 @@ public class MainActivity extends AppCompatActivity
         image_head= (ImageView) view_head.findViewById(R.id.header_headimg);
         tv_name= (TextView) view_head.findViewById(R.id.header_name);
         tv_sign= (TextView) view_head.findViewById(R.id.header_sign);
-        image_head.setImageResource(R.mipmap.ic_alert_green);
         head_rl.setOnClickListener(this);
         image_head.setOnClickListener(this);
         recyclerView_context= (RecyclerView) findViewById(R.id.list_context_main);

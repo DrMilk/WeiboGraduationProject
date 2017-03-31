@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+<EditText
+    android:id="@+id/sign_add_value"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:layout_marginBottom="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="关键字"
+    android:textSize="12sp"
+    android:textColor="@color/blue_black"
+    android:textColorHint="@color/blue_black"/>
+    <EditText
+        android:id="@+id/sign_add_percent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="10dp"
+        android:inputType="number"
+        android:hint="符合度 例如:70"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textColor="@color/blue_black"
+        android:textColorHint="@color/blue_black"/>
+</LinearLayout>

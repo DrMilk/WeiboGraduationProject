@@ -9,11 +9,13 @@ import cn.bmob.v3.BmobObject;
 public class WangRemark extends BmobObject {
     private String context;
     private String writename;
+    private String facename;
     private int greatpeoplo;
     private int badpeople;
-    public WangRemark(String context, String writename, int greatpeoplo, int badpeople) {
+    public WangRemark(String context, String writename, int greatpeoplo, int badpeople,String facename) {
         this.context = context;
         this.writename = writename;
+        this.facename=facename;
         this.greatpeoplo = greatpeoplo;
         this.badpeople = badpeople;
     }
@@ -50,6 +52,11 @@ public class WangRemark extends BmobObject {
         this.badpeople = badpeople;
     }
 
+    public String getFacename() {
+        return facename;
+    }
 
-
+    public void setFacename(String facename) {
+        this.facename = facename;
+    }
 }
