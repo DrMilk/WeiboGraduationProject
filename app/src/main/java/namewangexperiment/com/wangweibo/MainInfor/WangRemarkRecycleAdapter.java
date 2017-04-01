@@ -23,13 +23,15 @@ import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.UpdateListener;
 import namewangexperiment.com.wangweibo.OnlineData.WangRemark;
 import namewangexperiment.com.wangweibo.R;
+import namewangexperiment.com.wangweibo.Utils.L;
+import namewangexperiment.com.wangweibo.Utils.T;
 
 /**
  * Created by Administrator on 2017/1/25.
  */
 
 public class WangRemarkRecycleAdapter extends RecyclerView.Adapter<WangRemarkRecycleAdapter.MyViewHolder>{
-    private String TAG="WuRemarkRecycleAdapter";
+    private String TAG="WangRemarkRecycleAdapter";
     private Context context;
     private List<String> list_remark=new ArrayList<>();
     private List<Integer> list_height;
@@ -57,10 +59,8 @@ public class WangRemarkRecycleAdapter extends RecyclerView.Adapter<WangRemarkRec
             list_height.add(height);
             list_color.add(new Random().nextInt(4));
         }
-        Log.i(TAG,"should_max2");
         if(max_count<list_remark.size()){
             should_max+=max_count;
-            Log.i(TAG,"should_max1");
             for (int i=0;i<max_count;i++){
                 findRemarkContext(list_remark.get(i),0);
             }
@@ -292,7 +292,8 @@ private void findRemarkContext(String str_objectId,int i){
                     Log.i(TAG,"meishuaxin");
                 }
             }else{
-                Log.i("bmob","失败："+e.getMessage()+","+e.getErrorCode());
+                L.i(TAG,"服务器异常 个别评论获取失败");
+                T.showShot(context,"服务器异常 个别评论获取失败");
             }
         }
 

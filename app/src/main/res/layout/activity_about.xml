@@ -5,15 +5,7 @@
     android:id="@+id/activity_about"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/bg_about"
-    tools:context="treememory.com.treememory.MenuItemActivity.About">
-        <ImageView
-            android:layout_marginTop="140dp"
-            android:id="@+id/activity_about_bird"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/bird_loading"/>
-
+    android:background="@mipmap/bg_about">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -49,13 +41,8 @@
             android:id="@+id/about_word"
             android:layout_gravity="right"
             android:layout_width="wrap_content"
-            android:layout_height="200dp"
-            android:src="@mipmap/about1"/>
+            android:layout_height="200dp" />
     </LinearLayout>
 </LinearLayout>
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@mipmap/aboutkefu" />
 </FrameLayout>

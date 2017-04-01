@@ -44,6 +44,7 @@ import namewangexperiment.com.wangweibo.MainInfor.WangContextRecyclerViewAdapter
 import namewangexperiment.com.wangweibo.OnlineData.WangContext;
 import namewangexperiment.com.wangweibo.OnlineData.WangUser;
 import namewangexperiment.com.wangweibo.R;
+import namewangexperiment.com.wangweibo.Utils.AppUtil;
 import namewangexperiment.com.wangweibo.Utils.L;
 import namewangexperiment.com.wangweibo.Utils.MyUpload;
 import namewangexperiment.com.wangweibo.Utils.SharePreferenceUtil;
@@ -79,16 +80,6 @@ public class MainActivity extends AppCompatActivity
     private void initView() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -130,7 +121,6 @@ public class MainActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             SharePreferenceUtil.putSettingDataBoolean(mcontext,SharePreferenceUtil.AUTOLOGIN,false);
@@ -162,13 +152,12 @@ public class MainActivity extends AppCompatActivity
             it.putExtras(bundle);
             startActivity(it);
         } else if (id == R.id.nav_manage) {
-            Intent it1=new Intent(MainActivity.this,SettingActivity.class);startActivity(it1);
+            Intent it1=new Intent(MainActivity.this,SettingsActivity.class);startActivity(it1);
         } else if (id == R.id.nav_share) {
-
+            startActivity(AppUtil.getshareMsgIntent("分享","分享到","www.baidu.com","1"));
         } else if (id == R.id.nav_send) {
-
+            Intent it1=new Intent(MainActivity.this,About.class);startActivity(it1);
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -273,10 +262,10 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void done(WangContext object, BmobException e) {
                 if(e==null){
-                    L.i(TAG,"找到一个文章");
                     list_context.add(object);
+                    L.i(TAG,"找到一个文章"+list_context.size()+"allcontextnum"+allcontextnum);
                     if(list_context.size()==allcontextnum){
-                        L.i(TAG,"执行一次");
+                        L.i(TAG,"执行更新了");
                         if(updataContext()){
                             msetlistAdatper();
                         }

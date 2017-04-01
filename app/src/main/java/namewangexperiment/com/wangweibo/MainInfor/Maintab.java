@@ -295,6 +295,8 @@ public class Maintab extends Activity{
         other= (WangUser) bundle.getSerializable("wanguesr");
          mObjectId=bundle.getString("objectid");
         Log.i(TAG,"are you crazy?"+other.getObjectId());
+        Log.i(TAG,"are you crazy?"+other.getList_mine().size());
+        Log.i(TAG,"are you crazy?"+other.getList_reward().size());
         //textview.setText(other.getId());
         mInflater=LayoutInflater.from(this);
         view_context=mInflater.inflate(R.layout.tab_context,null);
@@ -463,7 +465,7 @@ public class Maintab extends Activity{
             @Override
             public void onClick(View v) {
                 if(checkuser()){
-                    WangRemark wuRemark=new WangRemark(tab_remark_edit.getText().toString(),user_id,0,0,other.getUsername());
+                    WangRemark wuRemark=new WangRemark(tab_remark_edit.getText().toString(),mineuser.getUsername(),0,0,other.getUsername());
                     wuRemark.save(new SaveListener<String>() {
                         @Override
                         public void done(String s, BmobException e) {
@@ -472,7 +474,6 @@ public class Maintab extends Activity{
                                 Snackbar.make(view_remark,"评论成功！", Snackbar.LENGTH_SHORT).show();
                             }else{
                                 Snackbar.make(view_remark,"上传失败！", Snackbar.LENGTH_SHORT).show();
-
                             }
                         }
                     });
@@ -504,46 +505,13 @@ public class Maintab extends Activity{
                 }
             }
         });
-        list_remark= new ArrayList<String>();
-        if(list_remark!=null&&list_remark.size()!=0) {
-            wuRemarkRecycleAdapter = new WangRemarkRecycleAdapter(this,list_remark);
-            recyclerView_remark.setItemAnimator(new DefaultItemAnimator());
-            recyclerView_remark.setAdapter(wuRemarkRecycleAdapter);
-//            wuRemarkRecycleAdapter.setOnRecyclerItemClickListener(new WuRemarkRecycleAdapter.OnRecyclerItemClickListener() {
-//                @Override
-//                public void onItemclick(WuRemarkRecycleAdapter.MyViewHolder view, int postion) {
-//                    Log.i(TAG,postion+"postion"+"点了");
-//                    wuRemarkRecycleAdapter.addGreat(view,postion);
-//                }
-//            });
-//            wuRemarkRecycleAdapter.setOnRecyclerItemLongClickListener(new WuRemarkRecycleAdapter.OnRecyclerItemLongClickListener() {
-//                @Override
-//                public void onItemLongclick(WuRemarkRecycleAdapter.MyViewHolder view, int postion) {
-//                    Log.i(TAG,postion+"postion"+"点了长");
-//                    wuRemarkRecycleAdapter.addBad(view,postion);
-//                }
-//            });
-//        }
-            //initData();
-            wuRemarkRecycleAdapter.setOnRecyclerGreatClickListener(new WangRemarkRecycleAdapter.OnRecyclerGreatClickListener() {
-                @Override
-                public void onGreatClick(WangRemarkRecycleAdapter.MyViewHolder view, int postion) {
-                    wuRemarkRecycleAdapter.addGreat(view, postion);
-                }
-            });
-            wuRemarkRecycleAdapter.setOnRecyclerBadClickListener(new WangRemarkRecycleAdapter.OnRecyclerBadClickListener() {
-                @Override
-                public void onBadClick(WangRemarkRecycleAdapter.MyViewHolder view, int postion) {
-                    wuRemarkRecycleAdapter.addBad(view, postion);
-                }
-            });
-        }
     }
 
     private void initContext(){
         ArrayList<String> list_contextid=new ArrayList<String>();
         list_contextid=other.getList_mine();
         lock_num=list_contextid.size();
+        L.i(TAG,"我要下载文章了了");
         if(lock_num!=-1){
             for(int i=0;i<lock_num;i++){
                 findContext(list_contextid.get(i),i);
@@ -552,19 +520,24 @@ public class Maintab extends Activity{
     }
     private void findContext(String str_objectId,int i){
         query = new BmobQuery<WangContext>();
+        query.setLimit(50);
         query.getObject(str_objectId, new QueryListener<WangContext>() {
-
             @Override
             public void done(WangContext object, BmobException e) {
                 if(e==null){
                    list_context.add(object);
+                    L.i(TAG,object.getObjectId()+"数量"+list_context.size()+"总数"+lock_num);
                     if(list_context.size()==lock_num){
                         if(updataContext()){
                             msetlistAdatper();
                         }
                     }
                 }else{
-                    Log.i("bmob","失败："+e.getMessage()+","+e.getErrorCode());
+                   L.i(TAG,"下载文章失败"+e.toString());
+                    T.showShot(context,"服务器异常个别文章获取失败");
+                    if(updataContext()){
+                        msetlistAdatper();
+                    }
                 }
             }
 
@@ -699,13 +672,15 @@ public class Maintab extends Activity{
                 public void done(WangSign object, BmobException e) {
                     if(e==null){
                         list_reward.add(object);
-                        Log.i(TAG,list_reward.size()+"ef");
+                        L.i(TAG,list_reward.size()+"个标签"+object.getObjectId());
                         if(list_reward.size()==list_reward_str.size()){
                             updataReward();
-                            Log.i(TAG,list_reward.size()+"ef"+list_reward_str.size());
+                            L.i(TAG,"更新标签了");
                         }
                     }else{
-                        Log.i("bmob","失败："+e.getMessage()+","+e.getErrorCode());
+                        updataReward();
+                        T.showShot(context,"服务器异常个别标签获取失败");
+                        L.i(TAG,"更新标签失败了");
                     }
                 }
 
@@ -779,10 +754,44 @@ public class Maintab extends Activity{
             });
             TextView text_get_ok= (TextView) linear.findViewById(R.id.reward_one_ok);
             text_get_ok.setText("+");
+            againAddClearSign();
             wuTagCloudLayout.addView(linear,marginLayoutParams);
             wuTagCloudLayout.invalidate();
         }
 
+    }
+
+    private void againAddClearSign() {
+        View linear=LayoutInflater.from(context).inflate(R.layout.reward_one,null);
+        LayoutParams lp=new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+        MarginLayoutParams marginLayoutParams= new MarginLayoutParams(lp.width,lp.height);
+        marginLayoutParams.setMargins(10,10,10,10);
+        LinearLayout linear_bg= (LinearLayout) linear.findViewById(R.id.reward_one_linear);
+        linear_bg.setBackgroundResource(R.drawable.tab_reward_bgcircle_on);
+        TextView text_keyword= (TextView) linear.findViewById(R.id.reward_one_keyword);
+        text_keyword.setText("清除");
+        text_keyword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                list_reward_str=new ArrayList<String>();
+                wuTagCloudLayout.removeAllViews();
+                wuTagCloudLayout.invalidate();
+                mineuser.setList_reward(list_reward_str);
+                mineuser.update(other.getObjectId(), new UpdateListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if(e==null){
+                            T.showShot(context,"更新成功！");
+                        }else {
+                            T.showShot(context,"更新失败！");
+                        }
+                    }
+                });
+            }
+        });
+        TextView text_get_ok= (TextView) linear.findViewById(R.id.reward_one_ok);
+        text_get_ok.setText("-");
+        wuTagCloudLayout.addView(linear,marginLayoutParams);
     }
 
     private void updataReward() {
@@ -874,11 +883,12 @@ public class Maintab extends Activity{
         anim.start();
         Log.i(TAG,"我藏了");
     }
+
     private View.OnClickListener onClicklistenner=new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.popupwindow_collection:updataUserAttention();break;//收藏
+                case R.id.popupwindow_collection:if(other.getUsername().equals(mineuser.getUsername()))T.showShot(context,"无法关注自己");else updataUserAttention();break;//收藏
                 case R.id.popupwindow_frinend_circle:
                     T.showShot(context,"- 暂未实现此接口 -");break;//生活圈
                 case R.id.popupwindow_info:break;//基本信息
@@ -998,19 +1008,56 @@ public class Maintab extends Activity{
         }
         if(other.isImgheadstutas())
         myUpload.download_asynchronous_head("wangweibodata", "headimg/" + other.getUsername(),imghead);
+        loadremark();
+    }
+    private void loadremark(){
         checkuser();
-        BmobQuery<WangRemark> query = new BmobQuery<WangRemark>();
-        query.addWhereEqualTo("facename", other.getUsername());
-        query.setLimit(10);
-        query.findObjects(new FindListener<WangRemark>() {
+        list_remark= new ArrayList<String>();
+        BmobQuery<WangRemark> queryremark = new BmobQuery<WangRemark>();
+        L.i(TAG,other.getUsername()+"other.getUsername()");
+        queryremark.addWhereEqualTo("facename", other.getUsername());
+        queryremark.setLimit(50);
+        queryremark.findObjects(new FindListener<WangRemark>() {
             @Override
             public void done(List<WangRemark> object,BmobException e) {
                 if(e==null){
-                    L.i(TAG,"有评论"+e.toString());
                     for(int i=0;i<object.size();i++){
+                        L.i(TAG,"有评论"+i);
                         list_remark.add(object.get(i).getObjectId());
                     }
-                    wuRemarkRecycleAdapter.notifyDataSetChanged();
+                    if(list_remark!=null&&list_remark.size()!=0) {
+                        wuRemarkRecycleAdapter = new WangRemarkRecycleAdapter(context,list_remark);
+                        recyclerView_remark.setItemAnimator(new DefaultItemAnimator());
+                        recyclerView_remark.setAdapter(wuRemarkRecycleAdapter);
+//            wuRemarkRecycleAdapter.setOnRecyclerItemClickListener(new WuRemarkRecycleAdapter.OnRecyclerItemClickListener() {
+//                @Override
+//                public void onItemclick(WuRemarkRecycleAdapter.MyViewHolder view, int postion) {
+//                    Log.i(TAG,postion+"postion"+"点了");
+//                    wuRemarkRecycleAdapter.addGreat(view,postion);
+//                }
+//            });
+//            wuRemarkRecycleAdapter.setOnRecyclerItemLongClickListener(new WuRemarkRecycleAdapter.OnRecyclerItemLongClickListener() {
+//                @Override
+//                public void onItemLongclick(WuRemarkRecycleAdapter.MyViewHolder view, int postion) {
+//                    Log.i(TAG,postion+"postion"+"点了长");
+//                    wuRemarkRecycleAdapter.addBad(view,postion);
+//                }
+//            });
+//        }
+                        //initData();
+                        wuRemarkRecycleAdapter.setOnRecyclerGreatClickListener(new WangRemarkRecycleAdapter.OnRecyclerGreatClickListener() {
+                            @Override
+                            public void onGreatClick(WangRemarkRecycleAdapter.MyViewHolder view, int postion) {
+                                wuRemarkRecycleAdapter.addGreat(view, postion);
+                            }
+                        });
+                        wuRemarkRecycleAdapter.setOnRecyclerBadClickListener(new WangRemarkRecycleAdapter.OnRecyclerBadClickListener() {
+                            @Override
+                            public void onBadClick(WangRemarkRecycleAdapter.MyViewHolder view, int postion) {
+                                wuRemarkRecycleAdapter.addBad(view, postion);
+                            }
+                        });
+                    }
                 }else{
                     L.i(TAG,"没有评论"+e.toString());
                 }
