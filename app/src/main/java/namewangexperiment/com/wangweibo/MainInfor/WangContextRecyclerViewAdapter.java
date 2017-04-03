@@ -3,6 +3,7 @@ package namewangexperiment.com.wangweibo.MainInfor;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import namewangexperiment.com.wangweibo.Utils.MyUpload;
  */
 
 public class WangContextRecyclerViewAdapter extends RecyclerView.Adapter<WangContextRecyclerViewAdapter.MyViewHolder>{
+    private String TAG="WangContextRecyclerViewAdapter";
     private final int NORMAL_TYPE=0;
     private final int FOOT_TYPE=1;
     MyUpload myUpload;
@@ -135,8 +137,11 @@ public class WangContextRecyclerViewAdapter extends RecyclerView.Adapter<WangCon
                     wuViewHolder.img2.setTag(list_context.get(position).getObjectId()+"_img2");
                     wuViewHolder.img3.setTag(list_context.get(position).getObjectId()+"_img3");
                     myUpload.download_asynchronous("wangweibodata", "context/" + list_context.get(position).getObjectId() + "/" + "img1", wuViewHolder.img1);
+                    Log.i(TAG,"img1");
                     myUpload.download_asynchronous("wangweibodata", "context/" + list_context.get(position).getObjectId() + "/" + "img2", wuViewHolder.img2);
+                    Log.i(TAG,"img2");
                     myUpload.download_asynchronous("wangweibodata", "context/" + list_context.get(position).getObjectId() + "/" + "img3", wuViewHolder.img3);
+                    Log.i(TAG,"img3");
                     break;
             }
         if(itemContextOnclickListenner!=null){

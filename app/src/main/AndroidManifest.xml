@@ -63,6 +63,7 @@
         <activity android:name=".Main.DetailContextActivity"/>
         <activity android:name=".Main.SettingsActivity"/>
         <activity android:name=".Main.About"/>
+        <activity android:name=".mintattentions.MainAttentions"/>
         <service android:name="com.amap.api.location.APSService"/>
         <meta-data
             android:name="com.amap.api.v2.apikey"

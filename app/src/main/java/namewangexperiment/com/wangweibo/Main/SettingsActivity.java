@@ -31,7 +31,6 @@ public class SettingsActivity extends Activity implements View.OnClickListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setOnHead();
         setContentView(R.layout.acticity_setting);
         mcontext=this;
         initdata();

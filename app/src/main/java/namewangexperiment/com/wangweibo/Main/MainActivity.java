@@ -50,6 +50,7 @@ import namewangexperiment.com.wangweibo.Utils.MyUpload;
 import namewangexperiment.com.wangweibo.Utils.SharePreferenceUtil;
 import namewangexperiment.com.wangweibo.Utils.T;
 import namewangexperiment.com.wangweibo.login.LoginActivity;
+import namewangexperiment.com.wangweibo.mintattentions.MainAttentions;
 import namewangexperiment.com.wangweibo.write.Writetreememory;
 
 public class MainActivity extends AppCompatActivity
@@ -157,6 +158,9 @@ public class MainActivity extends AppCompatActivity
             startActivity(AppUtil.getshareMsgIntent("分享","分享到","www.baidu.com","1"));
         } else if (id == R.id.nav_send) {
             Intent it1=new Intent(MainActivity.this,About.class);startActivity(it1);
+        }else if(id==R.id.nav_mineatttions){
+            Intent it1=new Intent(MainActivity.this, MainAttentions.class);
+            startActivity(it1);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -271,7 +275,10 @@ public class MainActivity extends AppCompatActivity
                         }
                     }
                 }else{
-                    Log.i("bmob","失败："+e.getMessage()+","+e.getErrorCode());
+                    T.showShot(mcontext,"服务器异常 个别文章加载失败");
+                    if(updataContext()){
+                        msetlistAdatper();
+                    }
                 }
             }
 

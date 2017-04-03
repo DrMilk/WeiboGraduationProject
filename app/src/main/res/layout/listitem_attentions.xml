@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<RelativeLayout
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="80dp">
+    <RelativeLayout
+        android:layout_width="73dp"
+        android:layout_height="73dp"
+        android:layout_gravity="center"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/tab_main_head">
+        <ImageView
+            android:id="@+id/attentions_headimg"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:src="@mipmap/ohi"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
+        <RelativeLayout
+            android:layout_centerVertical="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="100dp"
+            android:paddingRight="50dp"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/attentions_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="吴振宇"/>
+            <ImageView
+                android:id="@+id/attentions_sex"
+                android:layout_toRightOf="@id/attentions_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/userinfo_icon_male"/>
+            <TextView
+                android:layout_below="@id/attentions_name"
+                android:id="@+id/attentions_sign"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="我叫吴振宇啊~"/>
+        </RelativeLayout>
+        <TextView
+            android:id="@+id/attentions_jundge"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:text="已关注"/>
+</RelativeLayout>
+</LinearLayout>

@@ -3,6 +3,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 <LinearLayout
+    android:paddingTop="20dp"
     android:layout_marginTop="4dp"
     android:layout_marginLeft="6dp"
     android:layout_marginRight="6dp"
@@ -128,4 +129,13 @@
             android:text="地点"/>
     </RelativeLayout>
 </LinearLayout>
+    <TextView
+        android:paddingTop="20dp"
+        android:paddingLeft="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white_smoke"
+        android:textStyle="italic"
+        android:textSize="16sp"
+        android:text="评论:"/>
 </LinearLayout>

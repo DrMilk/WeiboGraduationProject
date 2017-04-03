@@ -129,7 +129,7 @@ public class MyUpload {
     }
     //异步
     public byte[] download_asynchronous(String bucketName, final String objectKey, final ImageView img){
-        final String cache_str=objectKey.split("/")[1];
+        final String cache_str=objectKey.split("/")[1]+"_"+objectKey.split("/")[2];
         Log.i(TAG,"查谁啊~"+cache_str);
         Bitmap bitmap=wuSdcard.getPicture(MySdcard.pathCacheImage,cache_str);
         if(bitmap!=null){
