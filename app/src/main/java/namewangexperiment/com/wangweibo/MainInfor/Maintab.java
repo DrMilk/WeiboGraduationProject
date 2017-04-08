@@ -1006,7 +1006,6 @@ public class Maintab extends Activity{
         if(other.getSex().equals("女")){
             imgsex.setImageResource(R.mipmap.userinfo_icon_female);
         }
-        if(other.isImgheadstutas())
         myUpload.download_asynchronous_head("wangweibodata", "headimg/" + other.getUsername(),imghead);
         loadremark();
     }

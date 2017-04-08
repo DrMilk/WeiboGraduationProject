@@ -75,7 +75,7 @@ public class SignActivity extends Activity implements View.OnClickListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setOnHead();
+       // setOnHead();
         setContentView(R.layout.activity_sign);
         mcontext=this;
         myUpload=new MyUpload(mcontext);

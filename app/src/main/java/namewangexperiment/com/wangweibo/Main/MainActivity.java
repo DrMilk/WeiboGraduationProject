@@ -3,8 +3,10 @@ package namewangexperiment.com.wangweibo.Main;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -49,12 +51,13 @@ import namewangexperiment.com.wangweibo.Utils.L;
 import namewangexperiment.com.wangweibo.Utils.MyUpload;
 import namewangexperiment.com.wangweibo.Utils.SharePreferenceUtil;
 import namewangexperiment.com.wangweibo.Utils.T;
+import namewangexperiment.com.wangweibo.login.ChangePasswordActivity;
 import namewangexperiment.com.wangweibo.login.LoginActivity;
 import namewangexperiment.com.wangweibo.mintattentions.MainAttentions;
 import namewangexperiment.com.wangweibo.write.Writetreememory;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener{
+        implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener,SwipeRefreshLayout.OnRefreshListener{
     private String TAG="MainActivity";
     private Context mcontext;
     private RelativeLayout head_rl;
@@ -68,6 +71,7 @@ public class MainActivity extends AppCompatActivity
     private int allcontextnum=0;
     private RecyclerView recyclerView_context;
     private WangContextRecyclerViewAdapter mcontextAdapter;
+    private SwipeRefreshLayout swipeRefreshLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,7 +90,6 @@ public class MainActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View view_head= navigationView.getHeaderView(0);
@@ -97,6 +100,13 @@ public class MainActivity extends AppCompatActivity
         head_rl.setOnClickListener(this);
         image_head.setOnClickListener(this);
         recyclerView_context= (RecyclerView) findViewById(R.id.list_context_main);
+        swipeRefreshLayout= (SwipeRefreshLayout) findViewById(R.id.main_refresh);
+        swipeRefreshLayout.setColorSchemeResources(R.color.purple_level,R.color.green_level,
+                R.color.blue_level, R.color.orange_level);
+        swipeRefreshLayout.setDistanceToTriggerSync(400);// 设置手指在屏幕下拉多少距离会触发下拉刷新
+        //swipeRefreshLayout.setProgressBackgroundColor(R.color.red); // 设定下拉圆圈的背景
+        swipeRefreshLayout.setSize(SwipeRefreshLayout.DEFAULT); // 设置圆圈的大小
+        swipeRefreshLayout.setOnRefreshListener(this);
     }
 
     @Override
@@ -127,6 +137,9 @@ public class MainActivity extends AppCompatActivity
             SharePreferenceUtil.putSettingDataBoolean(mcontext,SharePreferenceUtil.AUTOLOGIN,false);
             BmobUser.logOut();
             Intent it=new Intent(MainActivity.this, LoginActivity.class);startActivity(it);MainActivity.this.finish();
+            return true;
+        }else if(id==R.id.action_changerpassword){
+            Intent it=new Intent(MainActivity.this, ChangePasswordActivity.class);startActivity(it);MainActivity.this.finish();
             return true;
         }
 
@@ -211,17 +224,21 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+      //  this.onRefresh();
         if(list_context.size()==0){
+            swipeRefreshLayout.post(new Runnable(){
+                @Override
+                public void run() {
+                    swipeRefreshLayout.setRefreshing(true);
+                }
+            });
             if(checkuser()){
                 tv_name.setText(wangUser.getName());
                 String sign=wangUser.getSign();
                 if(sign!=null){
                     tv_sign.setText(sign);
                 }
-                if(wangUser.isImgheadstutas()){
                     myUpload.download_asynchronous_head("wangweibodata", "headimg/" + wangUser.getUsername(),image_head);
-                    L.i(TAG,"不会没更新投降吧！");
-                }
             }
             ArrayList<String> list_context_look=wangUser.getList_attention();
             L.i(TAG,list_context_look.size()+"我关注的用户数");
@@ -316,6 +333,7 @@ public class MainActivity extends AppCompatActivity
     }
     private void msetlistAdatper() {
         L.i(TAG,"更新recycleview");
+        swipeRefreshLayout.setRefreshing(false);
         StaggeredGridLayoutManager staggeredGridLayoutManager=new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
         recyclerView_context.setLayoutManager(staggeredGridLayoutManager);
         mcontextAdapter=new WangContextRecyclerViewAdapter(this,list_context);
@@ -333,5 +351,38 @@ public class MainActivity extends AppCompatActivity
         recyclerView_context.setAdapter(mcontextAdapter);
 //        listview_context.setAdapter(new Maincontext_Adapter(this,alist_context,alist_time,alist_level,alist_writer,alist_num,alist_numURL));
      //   context_loading_linear.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onRefresh() {
+        L.i(TAG,"onRefresh了");
+        if(list_context.size()==0){
+            if(checkuser()){
+                tv_name.setText(wangUser.getName());
+                String sign=wangUser.getSign();
+                if(sign!=null){
+                    tv_sign.setText(sign);
+                }
+                myUpload.download_asynchronous_head("wangweibodata", "headimg/" + wangUser.getUsername(),image_head);
+            }
+            ArrayList<String> list_context_look=wangUser.getList_attention();
+            L.i(TAG,list_context_look.size()+"我关注的用户数");
+            for(int i=0;i<list_context_look.size();i++){
+                L.i(TAG,list_context_look.size()+"");
+                seekattentions(list_context_look.get(i));
+            }
+            ArrayList<String> list_minecontext_id=wangUser.getList_mine();
+            allcontextnum+=list_minecontext_id.size();
+            for(int q=0;q<list_minecontext_id.size();q++){
+                findContext(list_minecontext_id.get(q),q);
+            }
+        }
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(false);
+                T.showShot(mcontext,"刷新成功!");
+            }
+        },5000);
     }
 }

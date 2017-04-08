@@ -106,9 +106,7 @@ public class PersonaldActivity extends Activity implements View.OnClickListener 
             ed_wechat.setText(wechat);
             ed_emial.setText(xuuser.getEmail());
             ed_sign.setText(xuuser.getSign());
-            if(xuuser.isImgheadstutas()){
-                myUpload.download_asynchronous_head("wangweibodata", "headimg/" + xuuser.getUsername(),img_head);
-            }
+            myUpload.download_asynchronous_head("wangweibodata", "headimg/" + xuuser.getUsername(),img_head);
         }
         super.onResume();
     }

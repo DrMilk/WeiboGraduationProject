@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -17,7 +18,9 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.UpdateListener;
 import namewangexperiment.com.wangweibo.Main.MainActivity;
+import namewangexperiment.com.wangweibo.MainInfor.Maintab;
 import namewangexperiment.com.wangweibo.OnlineData.WangUser;
 import namewangexperiment.com.wangweibo.R;
 import namewangexperiment.com.wangweibo.Utils.L;
@@ -37,6 +40,7 @@ public class MainAttentions extends Activity {
     private ArrayList<WangUser> list_wangusr=new ArrayList<>();
     private int attentions_length=0;
     private LinearLayout linear_process;
+    private ArrayList<String> list_str;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +61,7 @@ public class MainAttentions extends Activity {
     @Override
     protected void onResume() {
         if(checkuser()){
-            ArrayList<String> list_str=new ArrayList<>();
+            list_str=new ArrayList<>();
             list_str=wangUser.getList_attention();
             attentions_length=list_str.size();
             for(int i=0;i<list_str.size();i++){
@@ -68,9 +72,8 @@ public class MainAttentions extends Activity {
         super.onResume();
     }
     private boolean checkuser() {
-        WangUser bmobUser = BmobUser.getCurrentUser(WangUser.class);
-        if(bmobUser != null){
-            wangUser=bmobUser;
+        wangUser = BmobUser.getCurrentUser(WangUser.class);
+        if(wangUser != null){
             //  text_username.setText(name);
             return true;
         }else{
@@ -93,18 +96,76 @@ public class MainAttentions extends Activity {
                     list_wangusr.add(bmobUserfind);
                     if(list_wangusr.size()==attentions_length){
                         linear_process.setVisibility(View.GONE);
-                        adapter=new ListAttentionsAdapter(mcontext,list_wangusr);
+                        adapter=new ListAttentionsAdapter(mcontext,list_wangusr,wangUser);
                         listview_attentons.setAdapter(adapter);
                         adapter.notifyDataSetChanged();
+                        listview_attentons.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                Intent it=new Intent(MainAttentions.this, Maintab.class);
+                                Bundle bundle=new Bundle();
+                                bundle.putSerializable("wanguesr",list_wangusr.get(position));
+                                it.putExtras(bundle);
+                                startActivity(it);
+                            }
+                        });
                     }
                 }else{
                     L.i(TAG,"没有该用户"+e.toString());
                     T.showShot(mcontext,"网络异常 个别用户没有找到");
                     linear_process.setVisibility(View.GONE);
-                    adapter=new ListAttentionsAdapter(mcontext,list_wangusr);
+                    adapter=new ListAttentionsAdapter(mcontext,list_wangusr,wangUser);
                     listview_attentons.setAdapter(adapter);
+                    listview_attentons.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            Intent it=new Intent(MainAttentions.this, Maintab.class);
+                            Bundle bundle=new Bundle();
+                            bundle.putSerializable("wanguesr",list_wangusr.get(position));
+                            it.putExtras(bundle);
+                            startActivity(it);
+                        }
+                    });
                 }
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        }
+
+    @Override
+    protected void onStop() {boolean[] jundge=adapter.getJundge();
+        for(int i=0;i<jundge.length;i++){
+            if(jundge[i]){
+                for(int q=0;q<list_str.size();q++){
+                    if (list_str.equals(list_wangusr.get(i).getUsername())){
+                        String s=list_str.get(q);
+                        s="没有";
+                    }
+                }
+            }
+        }
+        int length=list_str.size();
+        for(int p=0;p<length;p++){
+            if(list_str.get(p).equals("没有")){
+                list_str.remove(p);
+                length--;
+            }
+        }
+        wangUser.setList_attention(list_str);
+        wangUser.update(wangUser.getObjectId(), new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if(e==null){
+                    T.showShot(mcontext,"更新我的关注成功");
+                }else {
+                    T.showShot(mcontext,"更新我的关注失败");
+                }
+            }
+        });
+        super.onStop();
     }
 }

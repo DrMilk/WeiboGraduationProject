@@ -93,7 +93,7 @@ public class WangSearch extends Activity implements View.OnClickListener{
     };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setOnHead();
+        //setOnHead();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         mcontext=this;

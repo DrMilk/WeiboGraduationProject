@@ -3,6 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 <RelativeLayout
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="80dp">
@@ -31,28 +35,42 @@
                 android:id="@+id/attentions_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:theme="@style/style_about"
+                android:textSize="16sp"
+                android:textStyle="normal"
                 android:text="吴振宇"/>
             <ImageView
                 android:id="@+id/attentions_sex"
+                android:layout_marginLeft="14dp"
                 android:layout_toRightOf="@id/attentions_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@mipmap/userinfo_icon_male"/>
             <TextView
+                android:paddingTop="6dp"
                 android:layout_below="@id/attentions_name"
                 android:id="@+id/attentions_sign"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:lines="1"
+                android:theme="@style/style_about_fu"
+                android:textSize="12sp"
+                android:textStyle="normal"
                 android:text="我叫吴振宇啊~"/>
         </RelativeLayout>
         <TextView
+            android:layout_marginRight="10dp"
+            android:padding="6dp"
             android:id="@+id/attentions_jundge"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_width="wrap_content"
+            android:layout_width="60dp"
+            android:gravity="center"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:textColor="@color/mp_lblue"
+            android:background="@drawable/button_bg_on"
             android:text="已关注"/>
 </RelativeLayout>
 </LinearLayout>
