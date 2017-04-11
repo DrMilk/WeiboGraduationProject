@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.util.Log;
 
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by Administrator on 2017/2/22.
@@ -78,7 +80,37 @@ public class AppUtil {
         intent.putExtra(Intent.EXTRA_SUBJECT, msgTitle);
         intent.putExtra(Intent.EXTRA_TEXT, msgText);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        //设置分享列表的标题，并且每次都显示分享列表
         return Intent.createChooser(intent, activityTitle);
     }
-
+    public static Intent getShareMsgIntentTwo(String s){
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, s);
+        shareIntent.setType("text/plain");
+        return shareIntent;
+    }
+    //分享单张图片
+    public Intent getShareSingleImageIntent(String imagePath) {
+        //由文件得到uri
+        Uri imageUri = Uri.fromFile(new File(imagePath));
+        Log.d("share", "uri:" + imageUri);  //输出：file:///storage/emulated/0/test.jpg
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
+        shareIntent.setType("image/*");
+        return shareIntent;
+    }
+    //分享多张图片
+    public Intent shareMultipleImage(ArrayList<String> list_uri) {
+        ArrayList<Uri> uriList = new ArrayList<>();
+        for(int i=0;i<list_uri.size();i++){
+            uriList.add(Uri.fromFile(new File(list_uri.get(i))));
+        }
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
+        shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uriList);
+        shareIntent.setType("image/*");
+        return shareIntent;
+    }
 }

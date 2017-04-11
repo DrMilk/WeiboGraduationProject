@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_manage) {
             Intent it1=new Intent(MainActivity.this,SettingsActivity.class);startActivity(it1);
         } else if (id == R.id.nav_share) {
-            startActivity(AppUtil.getshareMsgIntent("分享","分享到","www.baidu.com","1"));
+            startActivity(Intent.createChooser(AppUtil.getShareMsgIntentTwo("快去下载《心情》app，关注我哦~"+"   id"+wangUser.getUsername()),"分享到"));
         } else if (id == R.id.nav_send) {
             Intent it1=new Intent(MainActivity.this,About.class);startActivity(it1);
         }else if(id==R.id.nav_mineatttions){
