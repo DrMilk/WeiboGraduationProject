@@ -166,7 +166,7 @@ public class MyUpload {
                         Log.i("MyUpload",outStream.toByteArray().length+"weishaa");
                     }
                     Log.i("MyUpload","下载成功了");
-                    test(outStream.toByteArray());
+                  //  test(outStream.toByteArray());
                     outStream.close();
                     inputStream.close();
 
@@ -234,7 +234,7 @@ public class MyUpload {
                         Log.i("MyUpload",outStream.toByteArray().length+"weishaa");
                     }
                     Log.i("MyUpload","下载成功了");
-                    test(outStream.toByteArray());
+                    //test(outStream.toByteArray());
                     outStream.close();
                     inputStream.close();
 
@@ -331,7 +331,7 @@ public class MyUpload {
                 outStream.write(buffer,0,len);
                // Log.i("MyUpload",outStream.toByteArray().length+"zzzz");
             }
-            test(outStream.toByteArray());
+            //test(outStream.toByteArray());
             // 下载后可以查看文件元信息
             ObjectMetadata metadata = getResult.getMetadata();
             Log.d("MyUpload", metadata.getContentType());

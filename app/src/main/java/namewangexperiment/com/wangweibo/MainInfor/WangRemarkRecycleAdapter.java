@@ -33,7 +33,7 @@ import namewangexperiment.com.wangweibo.Utils.T;
 public class WangRemarkRecycleAdapter extends RecyclerView.Adapter<WangRemarkRecycleAdapter.MyViewHolder>{
     private String TAG="WangRemarkRecycleAdapter";
     private Context context;
-    private List<String> list_remark=new ArrayList<>();
+    private ArrayList<String> list_remark;
     private List<Integer> list_height;
     private List<Integer> list_color;
 //    private OnRecyclerItemClickListener mOnRecyclerItemClickListener=null;
@@ -49,9 +49,10 @@ public class WangRemarkRecycleAdapter extends RecyclerView.Adapter<WangRemarkRec
     private OnRecyclerGreatClickListener mOnRecyclerGreatClickListener=null;
     private OnRecyclerBadClickListener mOnRecyclerBadClickListener=null;
     private Animation anim_great;
-    public WangRemarkRecycleAdapter(Context context, List<String> list_remark){
+    public WangRemarkRecycleAdapter(Context context,ArrayList<String> list_remark){
         this.context=context;
         this.list_remark=list_remark;
+        L.i(TAG,list_remark.size()+"list_remark.size()");
         list_height=new ArrayList<>();
         list_color=new ArrayList<>();
         for (int i=0;i<list_remark.size();i++){
@@ -86,9 +87,10 @@ public class WangRemarkRecycleAdapter extends RecyclerView.Adapter<WangRemarkRec
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         if(getItemViewType(position) == NORMAL_TYPE){
+            L.i(TAG,list_remark.size()+"onBindViewHolder+list_remark.size()"+position);
             holder.remark_text.setText(list_remark_all.get(position).getContext());
-            if(list_remark_all.get(position).getGreatpeoplo()==0) holder.text_great.setText("");else holder.text_great.setText(list_remark_all.get(position).getGreatpeoplo()+"");
-            if(list_remark_all.get(position).getBadpeople()==0) holder.text_bad.setText("");else holder.text_great.setText(list_remark_all.get(position).getGreatpeoplo()+"");
+            if(list_remark_all.get(position).getGreatpeoplo()==0) holder.text_great.setText("0");else holder.text_great.setText(list_remark_all.get(position).getGreatpeoplo()+"");
+            if(list_remark_all.get(position).getBadpeople()==0) holder.text_bad.setText("0");else holder.text_great.setText(list_remark_all.get(position).getGreatpeoplo()+"");
             holder.text_bad.setText(list_remark_all.get(position).getBadpeople()+"");
             holder.text_write.setText(list_remark_all.get(position).getWritename());
             ViewGroup.LayoutParams parmas=holder.remark_text.getLayoutParams();
@@ -160,7 +162,7 @@ public class WangRemarkRecycleAdapter extends RecyclerView.Adapter<WangRemarkRec
 
     @Override
     public int getItemCount() {
-        return should_max;
+        return list_remark_all.size();
     }
 
     @Override
@@ -328,5 +330,8 @@ private void findRemarkContext(String str_objectId,int i){
             }
 
         });
+    }
+    public void updateRemark(){
+        this.notifyDataSetChanged();
     }
 }

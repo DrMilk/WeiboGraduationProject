@@ -381,7 +381,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void run() {
                 swipeRefreshLayout.setRefreshing(false);
-                T.showShot(mcontext,"刷新成功!");
+                T.showShot(mcontext,"刷新完成!");
             }
         },5000);
     }

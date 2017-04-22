@@ -97,16 +97,18 @@ public class PersonaldActivity extends Activity implements View.OnClickListener 
 
     @Override
     protected void onResume() {
-        if (checkuser()) {
-            L.i(TAG, "到这步了吗");
-            text_user.setText(xuuser.getUsername());
-            ed_name.setText(name);
-            ed_qq.setText(qq);
-            ed_address.setText(address);
-            ed_wechat.setText(wechat);
-            ed_emial.setText(xuuser.getEmail());
-            ed_sign.setText(xuuser.getSign());
-            myUpload.download_asynchronous_head("wangweibodata", "headimg/" + xuuser.getUsername(),img_head);
+        if(xuuser==null){
+            if (checkuser()) {
+                L.i(TAG, "到这步了吗");
+                text_user.setText(xuuser.getUsername());
+                ed_name.setText(name);
+                ed_qq.setText(qq);
+                ed_address.setText(address);
+                ed_wechat.setText(wechat);
+                ed_emial.setText(xuuser.getEmail());
+                ed_sign.setText(xuuser.getSign());
+                myUpload.download_asynchronous_head("wangweibodata", "headimg/" + xuuser.getUsername(),img_head);
+            }
         }
         super.onResume();
     }
@@ -204,6 +206,16 @@ public class PersonaldActivity extends Activity implements View.OnClickListener 
 
     private void openpicture() {
         imgstr=xuuser.getUsername()+".jpg";
+        File file=new File(mySdcard.getPathheadimg()+File.separator+imgstr);
+        if(file.exists()){
+            L.i(TAG,"存在"+mySdcard.getPathheadimg()+File.separator+imgstr);
+            file.delete();
+        }
+        file=new File(mySdcard.pathCacheImage+File.separator+xuuser.getUsername());
+        if(file.exists()){
+            L.i(TAG,"存在"+mySdcard.pathCacheImage+File.separator+xuuser.getUsername());
+            file.delete();
+        }
         Intent openAlbumIntent = new Intent(
                 Intent.ACTION_PICK);
         openAlbumIntent.setType("image/*");

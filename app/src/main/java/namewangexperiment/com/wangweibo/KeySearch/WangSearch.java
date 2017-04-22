@@ -256,6 +256,7 @@ public class WangSearch extends Activity implements View.OnClickListener{
                     bundle.putSerializable("wanguesr",bmobUser);
                     it.putExtras(bundle);
                     startActivity(it);
+                    WangSearch.this.finish();
                     L.i(TAG,"找到该用户");
                 }else{
                     L.i(TAG,"没有该用户"+e.toString());

@@ -137,5 +137,5 @@
         android:textColor="@color/white_smoke"
         android:textStyle="italic"
         android:textSize="16sp"
-        android:text="评论:"/>
+        android:text="评 论:"/>
 </LinearLayout>

@@ -46,7 +46,8 @@
                 android:gravity="center_vertical|right"
                 android:layout_marginLeft="6dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="0"/>
 
             <ImageView
                 android:id="@+id/recycle_remark_bad_pic"
@@ -60,7 +61,8 @@
                 android:gravity="center_vertical|right"
                 android:layout_marginLeft="6dp"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:text="0"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

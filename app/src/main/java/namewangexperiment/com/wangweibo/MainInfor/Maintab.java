@@ -90,7 +90,7 @@ public class Maintab extends Activity{
     private List<String> list_title=new ArrayList<String>();
     private WangUser other=new WangUser();
     private ArrayList<WangContext> list_context=new ArrayList<WangContext>();
-    private ArrayList<WangSign> list_reward=new ArrayList<WangSign>();
+    private ArrayList<WangSign> list_reward=new ArrayList<>();
     private ArrayList<String> list_reward_str;
     private BmobQuery<WangContext> query;
     private int lock_num=-1;
@@ -129,7 +129,8 @@ public class Maintab extends Activity{
     private PopupWindowMainTab mPopupWindows;
     private int width=-1;
     private int height=-1;
-    private ArrayList<String> list_remark;
+    private boolean remarkinit_status=false;
+    private ArrayList<String> list_remark=new ArrayList<>();
     private WangTagCloudLayout wuTagCloudLayout;
     private WangContextRecyclerViewAdapter mcontextAdapter;
     private Handler handler = new Handler()
@@ -436,7 +437,14 @@ public class Maintab extends Activity{
                 switch (position){
                     case 0:linear_remark_write.setVisibility(View.INVISIBLE); break;
                     case 1:linear_remark_write.setVisibility(View.INVISIBLE);break;
-                    case 2:linear_remark_write.setVisibility(View.VISIBLE);if(remark_bottom_status){remark_bottom_show=linear_remark_write.getY();remark_bottom_hide=remark_bottom_show+linear_remark_write.getHeight();remark_bottom_status=false;}break;
+                    case 2:linear_remark_write.setVisibility(View.VISIBLE);if(remark_bottom_status)
+                    {remark_bottom_show=linear_remark_write.getY();
+                        remark_bottom_hide=remark_bottom_show+linear_remark_write.getHeight();
+                        remark_bottom_status=false;}
+                        if(!remarkinit_status){
+                            loadremark();
+                        }
+                        break;
                 }
             }
 
@@ -1007,11 +1015,10 @@ public class Maintab extends Activity{
             imgsex.setImageResource(R.mipmap.userinfo_icon_female);
         }
         myUpload.download_asynchronous_head("wangweibodata", "headimg/" + other.getUsername(),imghead);
-        loadremark();
+       // loadremark();
     }
     private void loadremark(){
         checkuser();
-        list_remark= new ArrayList<String>();
         BmobQuery<WangRemark> queryremark = new BmobQuery<WangRemark>();
         L.i(TAG,other.getUsername()+"other.getUsername()");
         queryremark.addWhereEqualTo("facename", other.getUsername());
@@ -1024,7 +1031,9 @@ public class Maintab extends Activity{
                         L.i(TAG,"有评论"+i);
                         list_remark.add(object.get(i).getObjectId());
                     }
+                    remarkinit_status=true;
                     if(list_remark!=null&&list_remark.size()!=0) {
+                        L.i(TAG,"更新remark"+list_remark.size()+"条评论");
                         wuRemarkRecycleAdapter = new WangRemarkRecycleAdapter(context,list_remark);
                         recyclerView_remark.setItemAnimator(new DefaultItemAnimator());
                         recyclerView_remark.setAdapter(wuRemarkRecycleAdapter);
