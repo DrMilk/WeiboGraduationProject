@@ -16,6 +16,7 @@ import namewangexperiment.com.wangweibo.R;
  */
 
 public class Search_adapter extends BaseAdapter{
+    private String TAG="Search_adapter";
     private LayoutInflater minflater;
     private ArrayList<String> mlist;
     private WuViewHolder wuViewHolder;
