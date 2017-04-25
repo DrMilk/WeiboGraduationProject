@@ -38,6 +38,19 @@
                 android:textSize="14sp"
                 android:textColor="@color/weather_title"/>
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/tab_context_linear_no_people"
+            android:layout_marginTop="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="你还没有关注用户哦~"
+                android:textSize="16sp"
+                android:textColor="@color/context_text"/>
+        </LinearLayout>
         <ListView
             android:id="@+id/list_attentions"
             android:layout_width="match_parent"

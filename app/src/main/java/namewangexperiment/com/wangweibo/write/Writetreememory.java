@@ -22,6 +22,7 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -47,6 +48,7 @@ import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
+import namewangexperiment.com.wangweibo.Main.MainActivity;
 import namewangexperiment.com.wangweibo.OnlineData.Mine;
 import namewangexperiment.com.wangweibo.OnlineData.Other;
 import namewangexperiment.com.wangweibo.OnlineData.WangUser;
@@ -900,5 +902,15 @@ public class Writetreememory extends Activity {
         mLocationClient.setLocationOption(mLocationOption);
 //启动定位
         mLocationClient.startLocation();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode==KeyEvent.KEYCODE_BACK){
+            Intent it=new Intent(Writetreememory.this, MainActivity.class);
+            startActivity(it);
+            this.finish();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

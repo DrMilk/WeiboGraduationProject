@@ -40,6 +40,7 @@ public class MainAttentions extends Activity {
     private ArrayList<WangUser> list_wangusr=new ArrayList<>();
     private int attentions_length=0;
     private LinearLayout linear_process;
+    private LinearLayout linear_nopeople;
     private ArrayList<String> list_str;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,9 +53,11 @@ public class MainAttentions extends Activity {
     private void initView() {
         listview_attentons= (ListView) findViewById(R.id.list_attentions);
         linear_process= (LinearLayout) findViewById(R.id.tab_context_linear_loading);
+        linear_nopeople= (LinearLayout) findViewById(R.id.tab_context_linear_no_people);
+        linear_nopeople.setVisibility(View.INVISIBLE);
         ImageView img_context_loading= (ImageView) findViewById(R.id.tab_context_loading_anim);
         AnimationDrawable anim_context_loading= (AnimationDrawable) img_context_loading.getDrawable();
-        anim_context_loading.start();;
+        anim_context_loading.start();
 
     }
 
@@ -67,6 +70,10 @@ public class MainAttentions extends Activity {
             for(int i=0;i<list_str.size();i++){
                 L.i(TAG,list_str.size()+"");
                 seekattentions(list_str.get(i));
+            }
+            if(list_str.size()==0){
+                linear_nopeople.setVisibility(View.VISIBLE);
+                linear_process.setVisibility(View.GONE);
             }
         }
         super.onResume();

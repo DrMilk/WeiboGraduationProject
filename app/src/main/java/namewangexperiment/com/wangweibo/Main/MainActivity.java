@@ -156,6 +156,7 @@ public class MainActivity extends AppCompatActivity
             // Handle the camera action
             Intent it=new Intent(MainActivity.this, Writetreememory.class);
             startActivity(it);
+            MainActivity.this.finish();
         } else if (id == R.id.nav_search) {
             Intent it=new Intent(MainActivity.this, WangSearch.class);
             startActivity(it);
@@ -251,6 +252,14 @@ public class MainActivity extends AppCompatActivity
             for(int q=0;q<list_minecontext_id.size();q++){
                 findContext(list_minecontext_id.get(q),q);
             }
+            if(list_minecontext_id.size()==0&&list_context_look.size()==0){
+                swipeRefreshLayout.post(new Runnable(){
+                    @Override
+                    public void run() {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                });
+            }
         }
 
     }
@@ -270,6 +279,7 @@ public class MainActivity extends AppCompatActivity
                             findContext(list_contextid.get(i),i);
                         }
                 }else{
+                    swipeRefreshLayout.setRefreshing(false);
                     L.i(TAG,"没有该用户"+e.toString());
                     T.showShot(mcontext,"没找到该用户");
                 }
@@ -293,6 +303,7 @@ public class MainActivity extends AppCompatActivity
                     }
                 }else{
                     T.showShot(mcontext,"服务器异常 个别文章加载失败");
+                    swipeRefreshLayout.setRefreshing(false);
                     if(updataContext()){
                         msetlistAdatper();
                     }
@@ -356,6 +367,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onRefresh() {
         L.i(TAG,"onRefresh了");
+        L.i(TAG,"onRefresh了"+"到这步1");
+       //list_context=new ArrayList<>();
         if(list_context.size()==0){
             if(checkuser()){
                 tv_name.setText(wangUser.getName());
@@ -365,16 +378,19 @@ public class MainActivity extends AppCompatActivity
                 }
                 myUpload.download_asynchronous_head("wangweibodata", "headimg/" + wangUser.getUsername(),image_head);
             }
+            L.i(TAG,"onRefresh了"+"到这步1");
             ArrayList<String> list_context_look=wangUser.getList_attention();
             L.i(TAG,list_context_look.size()+"我关注的用户数");
             for(int i=0;i<list_context_look.size();i++){
                 L.i(TAG,list_context_look.size()+"");
                 seekattentions(list_context_look.get(i));
+                L.i(TAG,"onRefresh了"+"到这步2");
             }
             ArrayList<String> list_minecontext_id=wangUser.getList_mine();
             allcontextnum+=list_minecontext_id.size();
             for(int q=0;q<list_minecontext_id.size();q++){
                 findContext(list_minecontext_id.get(q),q);
+                L.i(TAG,"onRefresh了"+"到这步3");
             }
         }
         new Handler().postDelayed(new Runnable() {
