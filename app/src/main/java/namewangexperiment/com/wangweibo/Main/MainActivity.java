@@ -21,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -72,6 +73,7 @@ public class MainActivity extends AppCompatActivity
     private RecyclerView recyclerView_context;
     private WangContextRecyclerViewAdapter mcontextAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private LinearLayout linear_no;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,6 +102,8 @@ public class MainActivity extends AppCompatActivity
         head_rl.setOnClickListener(this);
         image_head.setOnClickListener(this);
         recyclerView_context= (RecyclerView) findViewById(R.id.list_context_main);
+        linear_no= (LinearLayout) findViewById(R.id.tab_context_linear_no);
+        linear_no.setVisibility(View.GONE);
         swipeRefreshLayout= (SwipeRefreshLayout) findViewById(R.id.main_refresh);
         swipeRefreshLayout.setColorSchemeResources(R.color.purple_level,R.color.green_level,
                 R.color.blue_level, R.color.orange_level);
@@ -256,6 +260,7 @@ public class MainActivity extends AppCompatActivity
                 swipeRefreshLayout.post(new Runnable(){
                     @Override
                     public void run() {
+                        linear_no.setVisibility(View.VISIBLE);
                         swipeRefreshLayout.setRefreshing(false);
                     }
                 });

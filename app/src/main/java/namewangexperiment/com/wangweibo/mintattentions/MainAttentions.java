@@ -144,7 +144,12 @@ public class MainAttentions extends Activity {
         }
 
     @Override
-    protected void onStop() {boolean[] jundge=adapter.getJundge();
+    protected void onStop() {
+        if(list_wangusr.size()==0){
+            super.onStop();
+            return;
+        }
+        boolean[] jundge=adapter.getJundge();
         for(int i=0;i<jundge.length;i++){
             if(jundge[i]){
                 for(int q=0;q<list_str.size();q++){
