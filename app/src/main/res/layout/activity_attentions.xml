@@ -52,6 +52,7 @@
                 android:textColor="@color/context_text"/>
         </LinearLayout>
         <ListView
+            android:divider="@null"
             android:id="@+id/list_attentions"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
