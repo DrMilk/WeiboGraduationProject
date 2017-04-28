@@ -21,6 +21,7 @@ android {
     }
     productFlavors {
     }
+
 }
 
 dependencies {
@@ -41,4 +42,13 @@ dependencies {
     compile files('libs/aliyun-oss-sdk-android-2.3.0.jar')
     compile files('libs/AMap_Location_V3.3.0_20170118.jar')
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    //    // LeanCloud 基础包
+    //    compile 'cn.leancloud.android:avoscloud-sdk:v3.+'
+    //    // 推送与实时聊天需要的包
+    //    compile('cn.leancloud.android:avoscloud-push:v3.+@aar') { transitive = true }
+    //    // LeanCloud 用户反馈包
+    //    compile 'cn.leancloud.android:avoscloud-feedback:v3.+@aar'
+    //    compile files('libs/Java-WebSocket-1.3.2-leancloud.jar')
+    compile files('libs/avoscloud-sdk-v3.16.4.jar')
+    compile files('libs/okio-1.6.0-leancloud.jar')
 }
