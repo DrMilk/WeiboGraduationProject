@@ -15,6 +15,7 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,6 +38,7 @@ import namewangexperiment.com.wangweibo.Utils.MyUpload;
 import namewangexperiment.com.wangweibo.Utils.T;
 import namewangexperiment.com.wangweibo.login.LoginActivity;
 import namewangexperiment.com.wangweibo.mineview.WangProcessDialog;
+import namewangexperiment.com.wangweibo.write.Writetreememory;
 
 /**
  * Created by Administrator on 2017/3/18.
@@ -146,6 +148,8 @@ public class PersonaldActivity extends Activity implements View.OnClickListener 
                 updatainfo();
                 break;
             case R.id.button_back:
+                Intent it=new Intent(PersonaldActivity.this, MainActivity.class);
+                startActivity(it);
                 PersonaldActivity.this.finish();
                 break;
             case R.id.header_headimg:openpicture();break;
@@ -452,5 +456,14 @@ public class PersonaldActivity extends Activity implements View.OnClickListener 
         img_head.setImageBitmap(BitmapUtil.toRoundBitmap(photo));
         //uploadPic(photo);
         //  }
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode==KeyEvent.KEYCODE_BACK){
+            Intent it=new Intent(PersonaldActivity.this, MainActivity.class);
+            startActivity(it);
+            this.finish();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

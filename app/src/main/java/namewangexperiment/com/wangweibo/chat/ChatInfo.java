@@ -9,6 +9,7 @@ public class ChatInfo {
     private String  text_context;
     private String img_id;
     private int kinds;
+    private boolean status;
     public ChatInfo(){}
     public ChatInfo(String text_time, String text_context, String img_id,int kinds) {
         this.text_time = text_time;

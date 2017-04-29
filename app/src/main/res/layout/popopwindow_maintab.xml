@@ -258,7 +258,7 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/blue_black"
                         android:textSize="12sp"
-                        android:text="复制链接"/>
+                        android:text="私信"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="wrap_content"

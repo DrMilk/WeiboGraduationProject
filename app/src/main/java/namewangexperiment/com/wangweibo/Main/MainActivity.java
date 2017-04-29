@@ -217,11 +217,11 @@ public class MainActivity extends AppCompatActivity
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.header_headimg_main_bg:
-                Intent it=new Intent(MainActivity.this,PersonaldActivity.class);startActivity(it);
+                Intent it=new Intent(MainActivity.this,PersonaldActivity.class);MainActivity.this.finish();startActivity(it);
                 break;
             case R.id.header_headimg:
                 L.i(TAG,"点了吗！");
-                Intent it1=new Intent(MainActivity.this,PersonaldActivity.class);startActivity(it1);
+                Intent it1=new Intent(MainActivity.this,PersonaldActivity.class);MainActivity.this.finish();startActivity(it1);
                 break;
         }
     }

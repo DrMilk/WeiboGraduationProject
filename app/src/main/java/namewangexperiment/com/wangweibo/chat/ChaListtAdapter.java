@@ -11,6 +11,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import namewangexperiment.com.wangweibo.R;
+import namewangexperiment.com.wangweibo.Utils.MyUpload;
 
 /**
  * Created by Administrator on 2017/4/27.
@@ -21,9 +22,11 @@ public class ChaListtAdapter extends BaseAdapter{
     private ArrayList<ChatInfo> mlist;
     private WuViewHolder viewHolder;
     private ChatInfo charinfo;
+    private MyUpload myUpload;
     public ChaListtAdapter(Context context, ArrayList<ChatInfo> mlist){
         minflater=LayoutInflater.from(context);
         this.mlist=mlist;
+        myUpload=new MyUpload(context);
     }
     @Override
     public int getCount() {
@@ -59,6 +62,7 @@ public class ChaListtAdapter extends BaseAdapter{
         }
         viewHolder.text_time.setText(charinfo.getText_time());
         viewHolder.text_content.setText(charinfo.getText_context());
+        myUpload.download_asynchronous_head("wangweibodata", "headimg/" +charinfo.getImg_id(),viewHolder.img_head);
        // viewHolder.img_head.setImageResource(charinfo.getImg_id());
         return convertView;
     }

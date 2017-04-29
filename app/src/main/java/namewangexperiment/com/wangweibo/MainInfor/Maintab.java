@@ -72,6 +72,8 @@ import namewangexperiment.com.wangweibo.R;
 import namewangexperiment.com.wangweibo.Utils.L;
 import namewangexperiment.com.wangweibo.Utils.MyUpload;
 import namewangexperiment.com.wangweibo.Utils.T;
+import namewangexperiment.com.wangweibo.chat.ChatUtil;
+import namewangexperiment.com.wangweibo.chat.Wechat;
 import namewangexperiment.com.wangweibo.login.LoginActivity;
 import namewangexperiment.com.wangweibo.wustringparsing.MyUrlGet;
 
@@ -896,11 +898,15 @@ public class Maintab extends Activity{
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.popupwindow_collection:if(other.getUsername().equals(mineuser.getUsername()))T.showShot(context,"无法关注自己");else updataUserAttention();break;//收藏
+                case R.id.popupwindow_collection:if(other.getUsername().equals(mineuser.getUsername()))
+                    T.showShot(context,"无法关注自己");else updataUserAttention();break;//收藏
                 case R.id.popupwindow_frinend_circle:
                     T.showShot(context,"- 暂未实现此接口 -");break;//生活圈
                 case R.id.popupwindow_info:break;//基本信息
-                case R.id.popupwindow_link:ClipboardManager cm= (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);cm.setText(MyUrlGet.getWeiboLink(mObjectId));T.showShot(context,"- 已复制 -");break;//复制链接
+                case R.id.popupwindow_link:Intent it1=new Intent(Maintab.this, Wechat.class);
+                    Bundle bundle=new Bundle();bundle.putString("toid",other.getUsername());it1.putExtras(bundle);startActivity(it1);break;
+                    //ClipboardManager cm= (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                // cm.setText(MyUrlGet.getWeiboLink(mObjectId));T.showShot(context,"- 已复制 -");break;//私信
                 case R.id.popupwindow_qq:T.showShot(context,"- 暂未实现此接口 -");break;//QQ
                 case R.id.popupwindow_qzone:T.showShot(context,"- 暂未实现此接口 -");break;//QQ空间
                 case R.id.popupwindow_reward:break;//悬赏
