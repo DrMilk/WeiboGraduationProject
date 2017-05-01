@@ -70,6 +70,7 @@ public class Maincontext_Adapter extends BaseAdapter{
             wuViewHolder.time= (TextView) convertView.findViewById(R.id.list_context_time);
             wuViewHolder.writer= (TextView) convertView.findViewById(R.id.list_context_writer);
             wuViewHolder.linear_img= (LinearLayout) convertView.findViewById(R.id.list_context_linearimg);
+            wuViewHolder.img_head= (ImageView) convertView.findViewById(R.id.list_heading_img);
             convertView.setTag(wuViewHolder);
         }else{
             wuViewHolder= (MyViewHolder) convertView.getTag();
@@ -77,6 +78,8 @@ public class Maincontext_Adapter extends BaseAdapter{
         wuViewHolder.context_text.setText(list_context.get(position));
         wuViewHolder.time.setText(list_time.get(position));
         wuViewHolder.writer.setText(list_writer.get(position));
+        myUpload.download_asynchronous_head("wangweibodata", "headimg/" +list_writer.get(position),wuViewHolder.img_head);
+        wuViewHolder.img_head.setImageResource(R.mipmap.ohd);
         switch (list_level.get(position)){
             case 0:wuViewHolder.level_img.setImageResource(R.mipmap.ic_alert_purple);wuViewHolder.level.setText("狂喜");wuViewHolder.level.setTextColor(mcontext.getResources().getColor(R.color.purple_level));wuViewHolder.context_text.setTextColor(mcontext.getResources().getColor(R.color.purple_level));break;   //设置颜色break;
             case 1:wuViewHolder.level_img.setImageResource(R.mipmap.ic_alert_red);wuViewHolder.level.setText("开心");wuViewHolder.level.setTextColor(mcontext.getResources().getColor(R.color.red_level));wuViewHolder.context_text.setTextColor(mcontext.getResources().getColor(R.color.red_level));break;
@@ -85,9 +88,9 @@ public class Maincontext_Adapter extends BaseAdapter{
             case 4:wuViewHolder.level_img.setImageResource(R.mipmap.ic_alert_green);wuViewHolder.level.setText("伤悲");wuViewHolder.level.setTextColor(mcontext.getResources().getColor(R.color.green_level));wuViewHolder.context_text.setTextColor(mcontext.getResources().getColor(R.color.green_level));break;
         }        switch (list_num.get(position)){
             case 0:wuViewHolder.linear_img.setVisibility(View.GONE);break;
-            case 1:myUpload.download_asynchronous("keymanword","context/"+list_numURL.get(position)+"/"+"img1",wuViewHolder.img1);wuViewHolder.img2.setVisibility(View.INVISIBLE);wuViewHolder.img3.setVisibility(View.INVISIBLE);break;
-            case 2:myUpload.download_asynchronous("keymanword","context/"+list_numURL.get(position)+"/"+"img1",wuViewHolder.img1);myUpload.download_asynchronous("keymanword","context/"+list_numURL.get(position)+"/"+"img2",wuViewHolder.img2);wuViewHolder.img3.setVisibility(View.INVISIBLE);break;
-            case 3:myUpload.download_asynchronous("keymanword","context/"+list_numURL.get(position)+"/"+"img1",wuViewHolder.img1);myUpload.download_asynchronous("keymanword","context/"+list_numURL.get(position)+"/"+"img2",wuViewHolder.img2);myUpload.download_asynchronous("keymanword","context/"+list_numURL.get(position)+"/"+"img3",wuViewHolder.img3);break;
+            case 1:myUpload.download_asynchronous("wangweibodata","context/"+list_numURL.get(position)+"/"+"img1",wuViewHolder.img1);wuViewHolder.img2.setVisibility(View.INVISIBLE);wuViewHolder.img3.setVisibility(View.INVISIBLE);break;
+            case 2:myUpload.download_asynchronous("wangweibodata","context/"+list_numURL.get(position)+"/"+"img1",wuViewHolder.img1);myUpload.download_asynchronous("wangweibodata","context/"+list_numURL.get(position)+"/"+"img2",wuViewHolder.img2);wuViewHolder.img3.setVisibility(View.INVISIBLE);break;
+            case 3:myUpload.download_asynchronous("wangweibodata","context/"+list_numURL.get(position)+"/"+"img1",wuViewHolder.img1);myUpload.download_asynchronous("wangweibodata","context/"+list_numURL.get(position)+"/"+"img2",wuViewHolder.img2);myUpload.download_asynchronous("wangweibodata","context/"+list_numURL.get(position)+"/"+"img3",wuViewHolder.img3);break;
         }
         return convertView;
     }
@@ -101,5 +104,6 @@ public class Maincontext_Adapter extends BaseAdapter{
         private ImageView img3;
         private TextView writer;
         private LinearLayout linear_img;
+        private ImageView img_head;
     }
 }

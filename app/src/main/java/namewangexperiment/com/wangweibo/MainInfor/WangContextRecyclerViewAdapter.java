@@ -76,6 +76,7 @@ public class WangContextRecyclerViewAdapter extends RecyclerView.Adapter<WangCon
             wuViewHolder.time.setText(list_context.get(position).getCreatedAt().substring(0,16));
             wuViewHolder.writer.setText(list_context.get(position).getWritename());
             wuViewHolder.bottom_address.setText(list_context.get(position).getAddress());
+            myUpload.download_asynchronous_head("wangweibodata", "headimg/" +list_context.get(position).getWritename(),wuViewHolder.img_head);
             switch (list_context.get(position).getFakelevel()) {
                 case 0:
                     wuViewHolder.level_img.setImageResource(R.mipmap.ic_alert_purple);
@@ -175,6 +176,7 @@ public class WangContextRecyclerViewAdapter extends RecyclerView.Adapter<WangCon
         return NORMAL_TYPE;
     }
     public class MyViewHolder extends RecyclerView.ViewHolder{
+        private ImageView img_head;
         private TextView time;
         private TextView level;
         private ImageView level_img;
@@ -200,6 +202,7 @@ public class WangContextRecyclerViewAdapter extends RecyclerView.Adapter<WangCon
                 writer= (TextView) itemView.findViewById(R.id.list_context_writer);
                 linear_img= (LinearLayout) itemView.findViewById(R.id.list_context_linearimg);
                 bottom_address= (TextView) itemView.findViewById(R.id.list_context_address);
+                img_head= (ImageView) itemView.findViewById(R.id.list_heading_img);
             }else if(viewtype==FOOT_TYPE){
                 bottom_img= (ImageView) itemView.findViewById(R.id.tab_remark_bottom_img);
                 bottom_text= (TextView) itemView.findViewById(R.id.tab_remark_bottom_text);

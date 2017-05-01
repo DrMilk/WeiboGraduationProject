@@ -202,6 +202,7 @@ public class MyUpload {
         Bitmap bitmap=wuSdcard.getPicture(MySdcard.pathCacheImage,cache_str);
         if(bitmap!=null){
             img.setImageBitmap(BitmapUtil.toRoundBitmap(bitmap));
+            L.i(TAG,"跟新图片了");
             return null;
         }
         Log.i(TAG,"到了吗");

@@ -93,6 +93,7 @@ public class Wechat extends Activity implements View.OnClickListener{
                 if(StringLegalUtil.isHaveLength(strmsg)){
                     sendContext(strmsg);
                 }
+                edit_context.setText("");
                 L.i(TAG,"点了");break;
         }
     }
@@ -100,6 +101,7 @@ public class Wechat extends Activity implements View.OnClickListener{
     private void sendContext(String strmsg) {
         listdata.add(new ChatInfo(getTime(),strmsg,userid,1));
         chatlistadapter.notifyDataSetChanged();
+        listview.smoothScrollToPosition(listview.getCount() - 1);
 //        new Thread(new Runnable() {
 //            @Override
 //            public void run() {
