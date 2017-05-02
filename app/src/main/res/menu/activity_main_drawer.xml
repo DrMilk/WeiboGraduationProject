@@ -18,13 +18,17 @@
             android:icon="@mipmap/ic_star"
             android:title="我的关注" />
         <item
-            android:id="@+id/nav_manage"
-            android:icon="@mipmap/ic_screen_lightness_normal"
-            android:title="设置" />
+            android:id="@+id/nav_minechat"
+            android:icon="@mipmap/ic_mobile_network_on"
+            android:title="我的对话" />
     </group>
 
     <item android:title="其它">
         <menu>
+            <item
+                android:id="@+id/nav_manage"
+                android:icon="@mipmap/ic_screen_lightness_normal"
+                android:title="设置" />
             <item
                 android:id="@+id/nav_share"
                 android:icon="@drawable/ic_menu_share"

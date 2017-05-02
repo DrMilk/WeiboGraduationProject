@@ -1,8 +1,12 @@
 package namewangexperiment.com.wangweibo.chat;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -30,6 +34,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import cn.bmob.v3.BmobUser;
+import namewangexperiment.com.wangweibo.Main.About;
+import namewangexperiment.com.wangweibo.Main.MainActivity;
 import namewangexperiment.com.wangweibo.OnlineData.WangUser;
 import namewangexperiment.com.wangweibo.R;
 import namewangexperiment.com.wangweibo.Utils.HttpUtil;
@@ -50,11 +56,13 @@ public class Wechat extends Activity implements View.OnClickListener{
     private String userid;
     private ArrayList<ChatInfo> listdata;
     private String toid;
+    private NotificationManager nm;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chat);
         context=this;
+        nm= (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         recvievdata();
         findViewId();
         initView();
@@ -99,6 +107,16 @@ public class Wechat extends Activity implements View.OnClickListener{
     }
 
     private void sendContext(String strmsg) {
+        Intent intent=new Intent();
+        intent.setClass(Wechat.this, About.class);
+        PendingIntent pi=PendingIntent.getActivity(getApplicationContext(),1,intent,0);
+        Notification notifation=new Notification.Builder(context).setContentTitle("心情微博")
+                .setContentText("你收到了一条消息")
+                .setContentIntent(pi)
+                .setDefaults(Notification.DEFAULT_SOUND)
+                .setSmallIcon(R.mipmap.upload_icon)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.mipmap.logo)).build();
+        nm.notify(10,notifation);
         listdata.add(new ChatInfo(getTime(),strmsg,userid,1));
         chatlistadapter.notifyDataSetChanged();
         listview.smoothScrollToPosition(listview.getCount() - 1);
@@ -184,6 +202,10 @@ public class Wechat extends Activity implements View.OnClickListener{
                 chatlistadapter.notifyDataSetChanged();
                 listview.smoothScrollToPosition(listview.getCount() - 1);
             }
+            Notification notifation=new Notification.Builder(context).setContentTitle("心情微博")
+                    .setContentText("你收别人的消息").setSmallIcon(R.mipmap.logo)
+                    .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.mipmap.logo)).build();
+            nm.notify(10,notifation);
             L.d("Tom & Jerry","aa");
         }
 
