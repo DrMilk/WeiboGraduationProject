@@ -13,8 +13,9 @@ import namewangexperiment.com.wangweibo.OnlineData.Other;
 
 public class MyInfoDao {
     private MySqliteOpenHelper msoh;
-    public void MyInfoDao(Context context){
-        msoh=new MySqliteOpenHelper(context);
+    public void MyInfoDao(){}
+    public void MyInfoDao(Context context,String name,int version){
+        msoh=new MySqliteOpenHelper(context,name,version);
     }
     public void goAdd(Context context, Other other){
         SQLiteDatabase sqld=msoh.getReadableDatabase();
