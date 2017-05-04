@@ -154,7 +154,7 @@ public class Wechat extends Activity implements View.OnClickListener{
         WangUser bmobUser = BmobUser.getCurrentUser(WangUser.class);
         if(bmobUser != null){
             userid=bmobUser.getUsername();
-            ReceiveMsgFrom();
+            receiveMsgFrom();
             AVIMMessageManager.registerDefaultMessageHandler(new CustomMessageHandler());
             // 允许用户使用应用
             //  String name= (String) BmobUser.getObjectByKey("treename");
@@ -165,7 +165,7 @@ public class Wechat extends Activity implements View.OnClickListener{
             return false;
         }
     }
-    public void ReceiveMsgFrom(){
+    public void receiveMsgFrom(){
         //Jerry登录
         AVIMClient jerry = AVIMClient.getInstance(userid);
         jerry.open(new AVIMClientCallback(){
@@ -203,7 +203,10 @@ public class Wechat extends Activity implements View.OnClickListener{
                 listview.smoothScrollToPosition(listview.getCount() - 1);
             }
             Notification notifation=new Notification.Builder(context).setContentTitle("心情微博")
-                    .setContentText("你收别人的消息").setSmallIcon(R.mipmap.logo)
+                    .setContentText("你收到了一条消息")
+//                    .setContentIntent(pi)
+                    .setDefaults(Notification.DEFAULT_SOUND)
+                    .setSmallIcon(R.mipmap.upload_icon)
                     .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.mipmap.logo)).build();
             nm.notify(10,notifation);
             L.d("Tom & Jerry","aa");

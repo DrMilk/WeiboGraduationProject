@@ -22,6 +22,7 @@ import namewangexperiment.com.wangweibo.Utils.MySdcard;
 import namewangexperiment.com.wangweibo.Utils.SharePreferenceUtil;
 import namewangexperiment.com.wangweibo.Utils.StringLegalUtil;
 import namewangexperiment.com.wangweibo.Utils.T;
+import namewangexperiment.com.wangweibo.chat.ChatService;
 import namewangexperiment.com.wangweibo.mineview.WangProcessDialog;
 
 /**

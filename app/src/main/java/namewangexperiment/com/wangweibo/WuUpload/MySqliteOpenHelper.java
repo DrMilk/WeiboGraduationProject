@@ -12,17 +12,19 @@ import namewangexperiment.com.wangweibo.Utils.L;
 
 public class MySqliteOpenHelper extends SQLiteOpenHelper{
     private String TAG="MySqliteOpenHelper";
-    private String CONVERSATION="conversation.db";
-    private String CONTENT="content.db";
-    private String MYSQLWUCHAT="wuchat";
+    String CONVERSATION="conversation";
+    String CONTENT="content";
+    String MYCHAT="mychat.db";
     public MySqliteOpenHelper(Context context,String name,int version) {
         super(context,name, null,version);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        // _id wrtiename details createtime
         db.execSQL("create table content (_id integer primary key autoincrement,writename varchar(20),details text,createtime date)");
-        db.execSQL("create table conversation (_id integer primary key autoincrement,writename varchar(20),lookstatus varchar(1),createtime date,chataddress text)");
+        // _id writename lookstatus createtime chataddress lasttext textnum
+        db.execSQL("create table conversation (_id integer primary key autoincrement,writename varchar(20),lookstatus varchar(1),createtime text,chataddress text,lasttext text,textnum varchar(4))");
         L.i(TAG,"数据库创建成功！");
     }
 

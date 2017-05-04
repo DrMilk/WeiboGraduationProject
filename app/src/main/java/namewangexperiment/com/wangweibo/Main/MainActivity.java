@@ -52,6 +52,7 @@ import namewangexperiment.com.wangweibo.Utils.L;
 import namewangexperiment.com.wangweibo.Utils.MyUpload;
 import namewangexperiment.com.wangweibo.Utils.SharePreferenceUtil;
 import namewangexperiment.com.wangweibo.Utils.T;
+import namewangexperiment.com.wangweibo.chat.ChatService;
 import namewangexperiment.com.wangweibo.login.ChangePasswordActivity;
 import namewangexperiment.com.wangweibo.login.LoginActivity;
 import namewangexperiment.com.wangweibo.mintattentions.MainAttentions;
@@ -203,6 +204,7 @@ public class MainActivity extends AppCompatActivity
         WangUser bmobUser = BmobUser.getCurrentUser(WangUser.class);
         if(bmobUser != null){
             wangUser=bmobUser;
+            startchatservice(bmobUser.getUsername());
             //  text_username.setText(name);
             return true;
         }else{
@@ -212,6 +214,13 @@ public class MainActivity extends AppCompatActivity
             MainActivity.this.finish();
             return false;
         }
+    }
+    private void startchatservice(String id){
+        Intent service=new Intent(MainActivity.this, ChatService.class);
+        Bundle bundle=new Bundle();
+        bundle.putString("userid",id);
+        service.putExtras(bundle);
+        startService(service);
     }
     @Override
     public void onClick(View v) {

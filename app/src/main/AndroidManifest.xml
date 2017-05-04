@@ -70,6 +70,8 @@
         <activity android:name=".mintattentions.MainAttentions"/>
         <activity android:name=".login.ChangePasswordActivity"/>
         <activity android:name=".chat.Wechat"/>
+        <activity android:name=".chat.ChatConversation"/>
+        <service android:name=".chat.ChatService"/>
         <service android:name="com.amap.api.location.APSService"/>
         <!-- 实时通信模块、推送（均需要加入以下声明） START -->
         <!-- 实时通信模块、推送都要使用 PushService -->
