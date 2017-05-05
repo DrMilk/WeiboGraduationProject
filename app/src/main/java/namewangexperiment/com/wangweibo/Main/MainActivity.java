@@ -10,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -52,6 +53,7 @@ import namewangexperiment.com.wangweibo.Utils.L;
 import namewangexperiment.com.wangweibo.Utils.MyUpload;
 import namewangexperiment.com.wangweibo.Utils.SharePreferenceUtil;
 import namewangexperiment.com.wangweibo.Utils.T;
+import namewangexperiment.com.wangweibo.chat.ChatConversation;
 import namewangexperiment.com.wangweibo.chat.ChatService;
 import namewangexperiment.com.wangweibo.login.ChangePasswordActivity;
 import namewangexperiment.com.wangweibo.login.LoginActivity;
@@ -78,6 +80,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        L.i(TAG,"创建了");
         setContentView(R.layout.activity_main);
         mcontext=this;
         myUpload=new MyUpload(mcontext);
@@ -156,7 +159,6 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
         if (id == R.id.nav_write) {
             // Handle the camera action
             Intent it=new Intent(MainActivity.this, Writetreememory.class);
@@ -179,6 +181,9 @@ public class MainActivity extends AppCompatActivity
             Intent it1=new Intent(MainActivity.this,About.class);startActivity(it1);
         }else if(id==R.id.nav_mineatttions){
             Intent it1=new Intent(MainActivity.this, MainAttentions.class);
+            startActivity(it1);
+        }else if(id==R.id.nav_minechat){
+            Intent it1=new Intent(MainActivity.this, ChatConversation.class);
             startActivity(it1);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -233,6 +238,12 @@ public class MainActivity extends AppCompatActivity
                 Intent it1=new Intent(MainActivity.this,PersonaldActivity.class);MainActivity.this.finish();startActivity(it1);
                 break;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        L.i(TAG,"推出了吗");
+        super.onDestroy();
     }
 
     @Override
@@ -415,4 +426,12 @@ public class MainActivity extends AppCompatActivity
             }
         },5000);
     }
+
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        if(keyCode==KeyEvent.KEYCODE_BACK){
+//            this.finish();
+//        }
+//        return false;
+//    }
 }

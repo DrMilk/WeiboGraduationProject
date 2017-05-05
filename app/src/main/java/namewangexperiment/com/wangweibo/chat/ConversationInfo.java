@@ -5,24 +5,26 @@ package namewangexperiment.com.wangweibo.chat;
  */
 
 public class ConversationInfo {
-    private String name;
+    private String text_title;
     private String text_content;
     private String text_num;
     private String time;
+    private String text_writername;
 
-    public ConversationInfo(String name, String text_content, String text_num, String time) {
-        this.name = name;
+    public ConversationInfo(String text_title, String text_content, String text_num, String time, String text_writername) {
+        this.text_title = text_title;
         this.text_content = text_content;
         this.text_num = text_num;
         this.time = time;
+        this.text_writername = text_writername;
     }
 
-    public String getName() {
-        return name;
+    public String getText_title() {
+        return text_title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setText_title(String text_title) {
+        this.text_title = text_title;
     }
 
     public String getText_content() {
@@ -47,5 +49,13 @@ public class ConversationInfo {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public String getText_writername() {
+        return text_writername;
+    }
+
+    public void setText_writername(String text_writername) {
+        this.text_writername = text_writername;
     }
 }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -41,6 +42,7 @@ import namewangexperiment.com.wangweibo.R;
 import namewangexperiment.com.wangweibo.Utils.HttpUtil;
 import namewangexperiment.com.wangweibo.Utils.L;
 import namewangexperiment.com.wangweibo.Utils.StringLegalUtil;
+import namewangexperiment.com.wangweibo.WuUpload.MyInfoDao;
 
 /**
  * Created by Administrator on 2017/4/27.
@@ -57,11 +59,13 @@ public class Wechat extends Activity implements View.OnClickListener{
     private ArrayList<ChatInfo> listdata;
     private String toid;
     private NotificationManager nm;
+    private MyInfoDao myinfodao;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chat);
         context=this;
+        myinfodao=new MyInfoDao(context,1);
         nm= (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         recvievdata();
         findViewId();
@@ -77,7 +81,24 @@ public class Wechat extends Activity implements View.OnClickListener{
     @Override
     protected void onResume() {
         super.onResume();
-        checkuser();
+        if(listdata.size()==0){
+           new Thread(new Runnable() {
+               @Override
+               public void run() {
+                   updatadata();
+                   chatlistadapter.notifyDataSetChanged();
+               }
+           }).start();
+            checkuser();
+        }
+    }
+
+    private void updatadata() {
+        ArrayList<ContentValues> listresultvalue=myinfodao.goQuery(myinfodao.CONTENT,"writename=?",new String[]{toid});
+        for(int i=0;i<listresultvalue.size();i++){
+            listdata.add(new ChatInfo((String)listresultvalue.get(i).get("createtime"),(String)listresultvalue.get(i).get("details"),toid,2));
+        }
+        myinfodao.goDelete(myinfodao.CONTENT,"writename=?",new String[]{toid});
     }
 
     private void initView() {

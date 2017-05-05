@@ -20,6 +20,7 @@ import com.avos.avoscloud.im.v2.AVIMMessageManager;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import namewangexperiment.com.wangweibo.Main.About;
@@ -38,6 +39,7 @@ public class ChatService extends Service{
     private NotificationManager nm;
     private Boolean init_status=false;
     private MyInfoDao infocontext;
+    private SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm");
     @Override
     public void onCreate() {
         L.i(TAG,"onCreate");
@@ -111,7 +113,7 @@ public class ChatService extends Service{
                 ContentValues content_values=new ContentValues();
                 content_values.put("writename",conversation.getCreator());
                 content_values.put("details",((AVIMTextMessage) message).getText());
-                content_values.put("createtime", String.valueOf(conversation.getCreatedAt()));
+                content_values.put("createtime",sdf.format(conversation.getCreatedAt()));
                 long id=infocontext.goInsert("content",content_values);
                 L.i(TAG,"----------------------"+id);
                 ArrayList<ContentValues> list=infocontext.goQuery("conversation","writename=?",new String[]{conversation.getCreator()});
@@ -119,14 +121,14 @@ public class ChatService extends Service{
                     ContentValues conversation_values=new ContentValues();
                     conversation_values.put("writename",conversation.getCreator());
                     conversation_values.put("lookstatus","1");
-                    conversation_values.put("createtime",String.valueOf(conversation.getCreatedAt()));
+                    conversation_values.put("createtime",sdf.format(conversation.getCreatedAt()));
                     conversation_values.put("chataddress",String.valueOf(id));
                     conversation_values.put("lasttext",((AVIMTextMessage) message).getText());
                     conversation_values.put("textnum",1);
                     infocontext.goInsert("conversation",conversation_values);
                 }else {
                     ContentValues conversation_values=list.get(0);
-                    conversation_values.put("createtime",String.valueOf(conversation.getCreatedAt()));
+                    conversation_values.put("createtime",sdf.format(conversation.getCreatedAt()));
                     String chataddress= (String) conversation_values.get("chataddress");
                     StringBuffer sb=new StringBuffer();
                     sb.append(chataddress);

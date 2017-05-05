@@ -19,14 +19,14 @@ import namewangexperiment.com.wangweibo.Utils.MyUpload;
  */
 
 public class ChatConversationAdapter extends BaseAdapter {
-    private ArrayList<ChatConversation> list_data;
+    private ArrayList<ConversationInfo> list_data;
     private boolean[] jundge;
     private MyUpload myUpload;
     private LayoutInflater inflater;
     private MyViewHolder wuViewHolder;
     private WangUser mine;
     private Context mcontext;
-    public ChatConversationAdapter(Context mcontext, ArrayList<ChatConversation> list_data){
+    public ChatConversationAdapter(Context mcontext, ArrayList<ConversationInfo> list_data){
         inflater=LayoutInflater.from(mcontext);
         this.list_data=list_data;
         this.mcontext=mcontext;
@@ -55,6 +55,9 @@ public class ChatConversationAdapter extends BaseAdapter {
             convertView=inflater.inflate(R.layout.listitem_conversation,null);
             wuViewHolder.img_head= (ImageView) convertView.findViewById(R.id.header_headimg);
             wuViewHolder.text_name= (TextView) convertView.findViewById(R.id.listitem2_title);
+            wuViewHolder.text_time= (TextView) convertView.findViewById(R.id.listitem2_time);
+            wuViewHolder.text_content= (TextView) convertView.findViewById(R.id.listitem2_context);
+            wuViewHolder.text_count= (TextView) convertView.findViewById(R.id.listitem2_count);
 //            wuViewHolder.text_content= (TextView) convertView.findViewById(R.id.attentions_sign);
 //            wuViewHolder.text_count= (TextView) convertView.findViewById(R.id.attentions_jundge);
 //            wuViewHolder.text_time= (ImageView) convertView.findViewById(R.id.attentions_sex);
@@ -62,36 +65,15 @@ public class ChatConversationAdapter extends BaseAdapter {
         }else {
             wuViewHolder= (MyViewHolder) convertView.getTag();
         }
-//        wuViewHolder.text_name.setText(list_data.get(position).getName());
-//        wuViewHolder.text_sign.setText(list_data.get(position).getSign());
-//        if(jundge[position]){
-//            wuViewHolder.text_jundge.setText("关 注");
-//            wuViewHolder.text_jundge.setTextColor( mcontext.getResources().getColor(R.color.white_smoke));
-//            wuViewHolder.text_jundge.setBackgroundResource(R.drawable.button_bg);
-//        }else {
-//            wuViewHolder.text_jundge.setText("已关注");
-//            wuViewHolder.text_jundge.setTextColor( mcontext.getResources().getColor(R.color.mp_lblue));
-//            wuViewHolder.text_jundge.setBackgroundResource(R.drawable.button_bg_on);
-//        }
-//        wuViewHolder.text_jundge.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if(jundge[position]){
-//                    jundge[position]=false;
-//                    wuViewHolder.text_jundge.setText("已关注");
-//                    wuViewHolder.text_jundge.setTextColor( mcontext.getResources().getColor(R.color.mp_lblue));
-//                    wuViewHolder.text_jundge.setBackgroundResource(R.drawable.button_bg_on);
-//                }else{
-//                    jundge[position]=true;
-//                    wuViewHolder.text_jundge.setText("关 注");
-//                    wuViewHolder.text_jundge.setTextColor( mcontext.getResources().getColor(R.color.white_smoke));
-//                    wuViewHolder.text_jundge.setBackgroundResource(R.drawable.button_bg);
-//                }
-//            }
-//        });
-//        if(list_data.get(position).getSex().equals("女"))
-//            wuViewHolder.img_sex.setImageResource(R.mipmap.userinfo_icon_female);
-//        myUpload.download_asynchronous_head("wangweibodata", "headimg/" + list_data.get(position).getUsername(),wuViewHolder.img_head);
+
+        myUpload.download_asynchronous_head("wangweibodata", "headimg/" +list_data.get(position).getText_writername(),wuViewHolder.img_head);
+        wuViewHolder.text_name.setText(list_data.get(position).getText_title());
+        wuViewHolder.text_content.setText(list_data.get(position).getText_content());
+        wuViewHolder.text_time.setText(list_data.get(position).getTime());
+        wuViewHolder.text_count.setText(list_data.get(position).getText_num());
+        if(list_data.get(position).getText_num().equals("0")){
+            wuViewHolder.text_count.setVisibility(View.INVISIBLE);
+        }
         return convertView;
     }
     private class MyViewHolder{

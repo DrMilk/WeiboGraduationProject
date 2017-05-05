@@ -19,6 +19,8 @@ import namewangexperiment.com.wangweibo.chat.ChatInfo;
 
 public class MyInfoDao {
     private String TAG="MyInfoDao";
+    public String CONVERSATION="conversation";
+    public String CONTENT="content";
     MySqliteOpenHelper msoh;
     public  MyInfoDao(){}
     public  MyInfoDao(Context context,int version){
@@ -49,7 +51,7 @@ public class MyInfoDao {
         SQLiteDatabase sqld=msoh.getReadableDatabase();
         //table:表名，columns:查询的列名，如果null代表查询所有列，selection：查询条件，selectionArgs：条件占位符的参数值，
         // groupBy：按什么字段分组，having：分组条件，orderBy：按什么字段排序
-        Cursor cursor=sqld.query(tablename,null,whereClause,str,null,null,null);
+        Cursor cursor=sqld.query(tablename,null,whereClause,str,null,null,"_id");
 //        Cursor cursor=sqLiteDatabase.rawQuery("select name,phone from info where name=?;",new String[]{"ef"});
         //获取cursor内容
         ArrayList<ContentValues> list=new ArrayList<>();
@@ -66,22 +68,43 @@ public class MyInfoDao {
         sqld.close();
         return list;
     }
-    public void showall(String tablename){
+    public ContentValues goQueryOnly(String tablename, String whereClause, String str[]){
+        SQLiteDatabase sqld=msoh.getReadableDatabase();
+        //table:表名，columns:查询的列名，如果null代表查询所有列，selection：查询条件，selectionArgs：条件占位符的参数值，
+        // groupBy：按什么字段分组，having：分组条件，orderBy：按什么字段排序
+        Cursor cursor=sqld.query(tablename,null,whereClause,str,null,null,null);
+//        Cursor cursor=sqLiteDatabase.rawQuery("select name,phone from info where name=?;",new String[]{"ef"});
+        ContentValues value=new ContentValues();
+        //获取cursor内容
+        if(cursor!=null && cursor.getCount()>0){
+            //while (cursor.moveToNext()){
+                cursor.moveToNext();
+                for(int i=0;i<cursor.getColumnCount();i++){
+                    value.put(cursor.getColumnName(i),cursor.getString(i));
+                }
+          //  }
+            cursor.close();
+        }
+        sqld.close();
+        return value;
+    }
+    public ArrayList<ContentValues> showall(String tablename){
         L.i(TAG,"showall");
         SQLiteDatabase sqld=msoh.getReadableDatabase();
         Cursor cursor = sqld.rawQuery("select * from "+tablename, null);
-     //   ArrayList<ContentValues> list=new ArrayList<>();
+        ArrayList<ContentValues> list=new ArrayList<>();
         if(cursor!=null && cursor.getCount()>0){
             while (cursor.moveToNext()){
-            //    ContentValues value=new ContentValues();
+                ContentValues value=new ContentValues();
                 for(int i=0;i<cursor.getColumnCount();i++){
                     L.i(TAG,cursor.getColumnName(i)+"----"+cursor.getString(i));
-                    //value.put(cursor.getColumnName(i),cursor.getString(i));
+                    value.put(cursor.getColumnName(i),cursor.getString(i));
                 }
-          //      list.add(value);
+                list.add(value);
             }
             cursor.close();
         }
         sqld.close();
+        return list;
     }
 }

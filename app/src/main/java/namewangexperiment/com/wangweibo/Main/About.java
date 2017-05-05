@@ -20,12 +20,12 @@ public class About extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
         imghead= (ImageView) findViewById(R.id.imageView2);
-        imghead.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent it=new Intent(About.this, Wechat.class);
-                startActivity(it);
-            }
-        });
+//        imghead.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent it=new Intent(About.this, Wechat.class);
+//                startActivity(it);
+//            }
+//        });
     }
 }

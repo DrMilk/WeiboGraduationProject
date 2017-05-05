@@ -526,6 +526,10 @@ public class Maintab extends Activity{
             for(int i=0;i<lock_num;i++){
                 findContext(list_contextid.get(i),i);
             }
+            if(lock_num==0){
+                context_loading_linear.setVisibility(View.INVISIBLE);
+                data_loading_linear.setVisibility(View.INVISIBLE);
+            }
         }
     }
     private void findContext(String str_objectId,int i){
