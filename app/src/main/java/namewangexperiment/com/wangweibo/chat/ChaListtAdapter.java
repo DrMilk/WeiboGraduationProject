@@ -21,6 +21,7 @@ import namewangexperiment.com.wangweibo.Utils.MyUpload;
  */
 
 public class ChaListtAdapter extends BaseAdapter{
+    private String TAG="ChaListtAdapter";
     private LayoutInflater minflater;
     private ArrayList<ChatInfo> mlist;
     private WuViewHolder viewHolder;
