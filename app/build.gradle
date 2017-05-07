@@ -39,8 +39,8 @@ dependencies {
     //Bmob兼容Android 6
     testCompile 'junit:junit:4.12'
     //  compile files('libs/download_1.1.4.1.jar')
-    compile files('libs/aliyun-oss-sdk-android-2.3.0.jar')
-    compile files('libs/AMap_Location_V3.3.0_20170118.jar')
+    provided files('libs/aliyun-oss-sdk-android-2.3.0.jar')
+    provided files('libs/AMap_Location_V3.3.0_20170118.jar')
     compile fileTree(include: ['*.jar'], dir: 'libs')
     //    // LeanCloud 基础包
     //    compile 'cn.leancloud.android:avoscloud-sdk:v3.+'
@@ -49,6 +49,6 @@ dependencies {
     //    // LeanCloud 用户反馈包
     //    compile 'cn.leancloud.android:avoscloud-feedback:v3.+@aar'
     //    compile files('libs/Java-WebSocket-1.3.2-leancloud.jar')
-    compile files('libs/avoscloud-sdk-v3.16.4.jar')
-    compile files('libs/okio-1.6.0-leancloud.jar')
+    provided files('libs/avoscloud-sdk-v3.16.4.jar')
+    //provided files('libs/okio-1.6.0-leancloud.jar')
 }

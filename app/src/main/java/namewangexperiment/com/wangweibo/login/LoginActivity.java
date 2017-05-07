@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -44,6 +45,7 @@ public class LoginActivity extends Activity implements View.OnClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        L.i(TAG,TAG+"启动了");
         mcontext=this;
         initView();
         mbmobinitdata();
@@ -117,7 +119,7 @@ public class LoginActivity extends Activity implements View.OnClickListener{
                 public void done(WangUser xuUser, BmobException e) {
                     if(xuUser!=null) {
                         Intent it=new Intent(LoginActivity.this,MainActivity.class);startActivity(it);
-                        LoginActivity.this.finish();
+                        finish();
                     }else {
                         T.showShot(mcontext,"登录失败！");
                         L.i(TAG,e.toString()+"登录失败！");
@@ -217,6 +219,7 @@ public class LoginActivity extends Activity implements View.OnClickListener{
     private void userrun() {
         Intent it=new Intent(LoginActivity.this,MainActivity.class);
         startActivity(it);
+        finish();
     }
 
     @Override

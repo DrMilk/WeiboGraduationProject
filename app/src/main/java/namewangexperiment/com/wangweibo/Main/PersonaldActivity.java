@@ -164,30 +164,30 @@ public class PersonaldActivity extends Activity implements View.OnClickListener 
         String emailnew = ed_emial.getText().toString().trim();
         String signnew=ed_sign.getText().toString().trim();
         xuprocessdialog.show();
-        WangUser newUser = new WangUser();
+//        WangUser newUser = new WangUser();
         if (namenew!=null)
         if (!namenew.equals(name))
-            newUser.setName(namenew);
+            xuuser.setName(namenew);
         if (addressnew!=null)
         if (!addressnew.equals(addressnew))
-            newUser.setAddress(addressnew);
+            xuuser.setAddress(addressnew);
         if (qq!=null)
         if (!qq.equals(qqnew))
-            newUser.setQq(qqnew);
+            xuuser.setQq(qqnew);
         if (wechat!=null)
         if (!wechat.equals(wechatnew))
-            newUser.setWechat(wechatnew);
+            xuuser.setWechat(wechatnew);
         if (email!=null)
         if (!email.equals(emailnew))
-            newUser.setEmail(emailnew);
+            xuuser.setEmail(emailnew);
         if (sign!=null)
         if(!sign.equals(signnew)){
-            newUser.setSign(signnew);
+            xuuser.setSign(signnew);
         }
         if(imgheadstutus==true){
-            newUser.setImgheadstutas(imgheadstutus);
+            xuuser.setImgheadstutas(imgheadstutus);
         }
-        newUser.update(xuuser.getObjectId(), new UpdateListener() {
+        xuuser.update(xuuser.getObjectId(), new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null) {
